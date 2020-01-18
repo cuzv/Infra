@@ -1,7 +1,7 @@
 import XCTest
 
-import CollectionsExtTests
+import CommonsTests
 
 var tests = [XCTestCaseEntry]()
-tests += CollectionsExtTests.allTests()
+tests += CommonsTests.allTests()
 XCTMain(tests)

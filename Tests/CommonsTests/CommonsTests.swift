@@ -1,13 +1,13 @@
 import XCTest
-@testable import CollectionsExt
+@testable import Commons
 
-final class CollectionsExtTests: XCTestCase {
+final class CommonsTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
     }
-
+    
     static var allTests = [
         ("testExample", testExample),
     ]
