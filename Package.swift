@@ -4,15 +4,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "Commons",
+    name: "Infrastructure",
     platforms: [
         .macOS(.v10_11), .iOS(.v8), .tvOS(.v9), .watchOS(.v2)
     ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
-            name: "Commons",
-            targets: ["Commons"]
+            name: "Infrastructure",
+            targets: ["Infrastructure"]
         ),
     ],
     dependencies: [
@@ -23,12 +23,12 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
-            name: "Commons",
+            name: "Infrastructure",
             path: "Sources"
         ),
         .testTarget(
-            name: "CommonsTests",
-            dependencies: ["Commons"]
+            name: "InfrastructureTests",
+            dependencies: ["Infrastructure"]
         ),
     ]
 )

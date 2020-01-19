@@ -1,8 +1,8 @@
 import Dispatch
 
 @propertyWrapper
-public struct Lock<Value> {
-    private let queue = DispatchQueue(label: "Locking", attributes: .concurrent)
+public struct Synchronized<Value> {
+    private let queue = DispatchQueue(label: "RWQueue", qos: .userInitiated, attributes: .concurrent)
     private var value: Value
 
     public init(wrappedValue value: Value) {
