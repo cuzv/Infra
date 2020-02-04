@@ -50,6 +50,28 @@ extension Sequence {
     }
 }
 
+extension Sequence where Element: Equatable {
+    @inline(__always)
+    public func filter(_ valuesToFilter: Element...) -> [Element] {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func filter<Sequence: Swift.Sequence>(_ valuesToFilter: Sequence) -> [Element] where Sequence.Element == Element {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore(_ valuesToIgnore: Element...) -> [Element] {
+        filter { !valuesToIgnore.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore<Sequence: Swift.Sequence>(_ valuesToIgnore: Sequence) -> [Element] where Sequence.Element == Element {
+        filter { !valuesToIgnore.contains($0) }
+    }
+}
+
 extension LazySequence {
     @inline(__always)
     public func map<U>(_ type: U.Type) -> LazyMapSequence<Base, U?> {
@@ -99,6 +121,28 @@ extension LazySequence {
     @inline(__always)
     public func ignore(_ notIncluded: @escaping (Element) -> Bool) -> LazyFilterSequence<Base> {
         filter { !notIncluded($0) }
+    }
+}
+
+extension LazySequence where Element: Equatable {
+    @inline(__always)
+    public func filter(_ valuesToFilter: Element...) -> LazyFilterSequence<Base> {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func filter<Sequence: Swift.Sequence>(_ valuesToFilter: Sequence) -> LazyFilterSequence<Base> where Sequence.Element == Element {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore(_ valuesToIgnore: Element...) -> LazyFilterSequence<Base> {
+        filter { !valuesToIgnore.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore<Sequence: Swift.Sequence>(_ valuesToIgnore: Sequence) -> LazyFilterSequence<Base> where Sequence.Element == Element {
+        filter { !valuesToIgnore.contains($0) }
     }
 }
 
@@ -154,6 +198,28 @@ extension LazyMapSequence {
     }
 }
 
+extension LazyMapSequence where Element: Equatable {
+    @inline(__always)
+    public func filter(_ valuesToFilter: Element...) -> LazyFilterSequence<LazyMapSequence<Base, Element>> {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func filter<Sequence: Swift.Sequence>(_ valuesToFilter: Sequence) -> LazyFilterSequence<LazyMapSequence<Base, Element>> where Sequence.Element == Element {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore(_ valuesToIgnore: Element...) -> LazyFilterSequence<LazyMapSequence<Base, Element>> {
+        filter { !valuesToIgnore.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore<Sequence: Swift.Sequence>(_ valuesToIgnore: Sequence) -> LazyFilterSequence<LazyMapSequence<Base, Element>> where Sequence.Element == Element {
+        filter { !valuesToIgnore.contains($0) }
+    }
+}
+
 extension LazyFilterSequence {
     @inline(__always)
     public func map<U>(_ type: U.Type) -> LazyMapSequence<LazyFilterSequence<Base>, U?> {
@@ -203,6 +269,28 @@ extension LazyFilterSequence {
     @inline(__always)
     public func ignore(_ notIncluded: @escaping (Element) -> Bool) -> LazyFilterSequence<Base> {
         filter { !notIncluded($0) }
+    }
+}
+
+extension LazyFilterSequence where Element: Equatable {
+    @inline(__always)
+    public func filter(_ valuesToFilter: Element...) -> LazyFilterSequence<Base> {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func filter<Sequence: Swift.Sequence>(_ valuesToFilter: Sequence) -> LazyFilterSequence<Base> where Sequence.Element == Element {
+        filter { valuesToFilter.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore(_ valuesToIgnore: Element...) -> LazyFilterSequence<Base> {
+        filter { !valuesToIgnore.contains($0) }
+    }
+
+    @inline(__always)
+    public func ignore<Sequence: Swift.Sequence>(_ valuesToIgnore: Sequence) -> LazyFilterSequence<Base> where Sequence.Element == Element {
+        filter { !valuesToIgnore.contains($0) }
     }
 }
 
