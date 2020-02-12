@@ -2,7 +2,7 @@ import CoreGraphics
 
 extension CGPoint {
     public static func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-        return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+        .init(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
     }
 
     public static func += (lhs: inout CGPoint, rhs: CGPoint) {
@@ -10,7 +10,7 @@ extension CGPoint {
     }
 
     public static func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-        return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+        .init(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
     }
 
     public static func -= (lhs: inout CGPoint, rhs: CGPoint) {
@@ -18,7 +18,7 @@ extension CGPoint {
     }
 
     public static func * (point: CGPoint, scalar: CGFloat) -> CGPoint {
-        return CGPoint(x: point.x * scalar, y: point.y * scalar)
+        .init(x: point.x * scalar, y: point.y * scalar)
     }
 
     public static func *= (point: inout CGPoint, scalar: CGFloat) {
@@ -26,6 +26,6 @@ extension CGPoint {
     }
 
     public static func * (scalar: CGFloat, point: CGPoint) -> CGPoint {
-        return CGPoint(x: point.x * scalar, y: point.y * scalar)
+        point.applying(.init(translationX: scalar, y: scalar))
     }
 }

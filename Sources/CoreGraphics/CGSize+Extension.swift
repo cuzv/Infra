@@ -3,37 +3,47 @@ import CoreGraphics
 extension CGSize {
     @inline(__always)
     public var aspectRatio: CGFloat {
-        return height == 0 ? 0 : width / height
+        height == 0 ? 0 : width / height
     }
 
     @inline(__always)
     public var maxDimension: CGFloat {
-        return max(width, height)
+        max(width, height)
     }
 
     @inline(__always)
     public var minDimension: CGFloat {
-        return min(width, height)
+        min(width, height)
+    }
+
+    @inline(__always)
+    public var ceiled: CGSize {
+        .init(width: ceil(width), height: ceil(height))
+    }
+
+    @inline(__always)
+    public var floored: CGSize {
+        .init(width: floor(width), height: floor(height))
     }
 }
 
 extension CGSize {
-    public func aspectFit(to boundingSize: CGSize) -> CGSize {
-        let minRatio = min(boundingSize.width / width, boundingSize.height / height)
-        return CGSize(width: width * minRatio, height: height * minRatio)
+    public func scaleAspectFit(to boundingSize: CGSize) -> CGSize {
+        let scale = min(boundingSize.width / width, boundingSize.height / height)
+        return applying(CGAffineTransform(scaleX: scale, y: scale))
     }
 
-    public func aspectFill(to boundingSize: CGSize) -> CGSize {
-        let minRatio = max(boundingSize.width / width, boundingSize.height / height)
-        let aWidth = min(width * minRatio, boundingSize.width)
-        let aHeight = min(height * minRatio, boundingSize.height)
-        return CGSize(width: aWidth, height: aHeight)
+    public func scaleAspectFill(to boundingSize: CGSize) -> CGSize {
+        let scale = max(boundingSize.width / width, boundingSize.height / height)
+        let aWidth = min(width * scale, boundingSize.width)
+        let aHeight = min(height * scale, boundingSize.height)
+        return .init(width: aWidth, height: aHeight)
     }
 }
 
 extension CGSize {
     public static func + (lhs: CGSize, rhs: CGSize) -> CGSize {
-        return CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+        lhs.applying(.init(translationX: rhs.width, y: rhs.height))
     }
 
     public static func += (lhs: inout CGSize, rhs: CGSize) {
@@ -42,7 +52,7 @@ extension CGSize {
     }
 
     public static func - (lhs: CGSize, rhs: CGSize) -> CGSize {
-        return CGSize(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
+        lhs.applying(.init(translationX: -rhs.width, y: -rhs.height))
     }
 
     public static func -= (lhs: inout CGSize, rhs: CGSize) {
@@ -51,15 +61,15 @@ extension CGSize {
     }
 
     public static func * (lhs: CGSize, rhs: CGSize) -> CGSize {
-        return CGSize(width: lhs.width * rhs.width, height: lhs.height * rhs.height)
+        lhs.applying(.init(scaleX: rhs.width, y: rhs.height))
     }
 
     public static func * (lhs: CGSize, scalar: CGFloat) -> CGSize {
-        return CGSize(width: lhs.width * scalar, height: lhs.height * scalar)
+        lhs * CGSize(width: scalar, height: scalar)
     }
 
     public static func * (scalar: CGFloat, rhs: CGSize) -> CGSize {
-        return CGSize(width: scalar * rhs.width, height: scalar * rhs.height)
+        rhs * scalar
     }
 
     public static func *= (lhs: inout CGSize, rhs: CGSize) {

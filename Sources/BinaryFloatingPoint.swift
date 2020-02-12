@@ -1,6 +1,6 @@
 import Darwin
 
-public extension BinaryFloatingPoint {
+extension BinaryFloatingPoint {
     /// SwifterSwift: Returns a rounded value with the specified number of
     /// decimal places and rounding rule. If `numberOfDecimalPlaces` is negative,
     /// `0` will be used.
@@ -19,7 +19,7 @@ public extension BinaryFloatingPoint {
     ///   - numberOfDecimalPlaces: The expected number of decimal places.
     ///   - rule: The rounding rule to use.
     /// - Returns: The rounded value.
-    func rounded(numberOfDecimalPlaces: Int, rule: FloatingPointRoundingRule) -> Self {
+    public func rounded(numberOfDecimalPlaces: Int, rule: FloatingPointRoundingRule) -> Self {
         let factor = Self(pow(10.0, Double(max(0, numberOfDecimalPlaces))))
         return (self * factor).rounded(rule) / factor
     }
