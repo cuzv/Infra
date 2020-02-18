@@ -2,7 +2,9 @@ import CoreGraphics
 
 extension CGRect {
     public init(center: CGPoint, size: CGSize) {
-        self.init(x: center.x - 0.5 * size.width, y: center.y - 0.5 * size.height, width: size.width, height: size.height)
+        let translation = size.applying(.init(scaleX: -0.5, y: -0.5))
+        let origin = center.applying(.init(translationX: translation.width, y: translation.height))
+        self.init(origin: origin, size: size)
     }
 
     @inline(__always)
