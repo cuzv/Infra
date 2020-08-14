@@ -33,4 +33,8 @@ extension CGRect {
         let targetSize = size.applying(.init(scaleX: scale, y: scale))
         return .init(center: boundingRect.center, size: targetSize)
     }
+
+    public func centering(to boundingRect: CGRect) -> CGRect {
+        offsetBy(dx: boundingRect.midX - midX, dy: boundingRect.midY - midY)
+    }
 }
