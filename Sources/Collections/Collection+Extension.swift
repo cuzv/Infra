@@ -14,3 +14,30 @@ extension Collection {
         return Array(iterator)
     }
 }
+
+extension Collection {
+    @inline(__always)
+    public func toTuple2() -> (Element, Element) {
+        (self[startIndex], self[index(after: startIndex)])
+    }
+    
+    @inline(__always)
+    public func toTuple3() -> (Element, Element, Element) {
+        (self[startIndex], self[index(after: startIndex)], self[index(startIndex, offsetBy: 2)])
+    }
+    
+    @inline(__always)
+    public func toTuple4() -> (Element, Element, Element, Element) {
+        (self[startIndex], self[index(after: startIndex)], self[index(startIndex, offsetBy: 2)], self[index(startIndex, offsetBy: 3)])
+    }
+    
+    @inline(__always)
+    public func toTuple5() -> (Element, Element, Element, Element, Element) {
+        (self[startIndex], self[index(after: startIndex)], self[index(startIndex, offsetBy: 2)], self[index(startIndex, offsetBy: 3)], self[index(startIndex, offsetBy: 4)])
+    }
+    
+    @inline(__always)
+    public func toTuple6() -> (Element, Element, Element, Element, Element, Element) {
+        (self[startIndex], self[index(after: startIndex)], self[index(startIndex, offsetBy: 2)], self[index(startIndex, offsetBy: 3)], self[index(startIndex, offsetBy: 4)], self[index(startIndex, offsetBy: 5)])
+    }
+}

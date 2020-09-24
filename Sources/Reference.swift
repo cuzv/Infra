@@ -89,3 +89,15 @@ extension Reference where Self: AnyObject {
         }
     }
 }
+
+extension Reference where Self: AnyObject {
+    public func weak<In, Out>(_ action: @escaping (Self) -> (In) -> Out, defaultValue: @autoclosure @escaping () -> Out) -> (In) -> Out {
+        return { [weak base = self] input in
+            if let target = base {
+                return action(target)(input)
+            } else {
+                return defaultValue()
+            }
+        }
+    }
+}
