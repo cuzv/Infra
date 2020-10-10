@@ -202,3 +202,64 @@ extension String {
         (self as NSString).appendingPathExtension(str) ?? self
     }
 }
+
+extension String {
+    // a: 97, z: 122
+    // A: 65, Z: 90
+
+    public func encodeLetters() -> String {
+        var result = [String.Element]()
+
+        for ch in self {
+            if ch.isLetter {
+                var candidate = ch.asciiValue! + 8
+
+                if ch.isLowercase {
+                    if candidate > 122 {
+                        candidate = candidate - 122 + 97
+                    }
+                } else if ch.isUppercase {
+                    if candidate > 90 {
+                        candidate = candidate - 90 + 65
+                    }
+                }
+
+                assert(97...122 ~= candidate || 65...90 ~= candidate)
+
+                result.append(.init(.init(candidate)))
+            } else {
+                result.append(ch)
+            }
+        }
+
+        return String(result)
+    }
+
+    public func decodeLetters() -> String {
+        var result = [String.Element]()
+
+        for ch in self {
+            if ch.isLetter {
+                var candidate = ch.asciiValue! - 8
+
+                if ch.isLowercase {
+                    if candidate < 97 {
+                        candidate = candidate + 122 - 97
+                    }
+                } else if ch.isUppercase {
+                    if candidate < 90 {
+                        candidate = candidate + 90 - 65
+                    }
+                }
+
+                assert(97...122 ~= candidate || 65...90 ~= candidate)
+
+                result.append(.init(.init(candidate)))
+            } else {
+                result.append(ch)
+            }
+        }
+
+        return String(result)
+    }
+}
