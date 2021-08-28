@@ -1,8 +1,5 @@
 import Foundation
 import MachO.ldsyms
-#if canImport(UIKit)
-import UIKit
-#endif
 
 public struct OSEnvironment {
     /// Indicates whether the app is from Apple Store or not. Returns false if the app is on simulator,
@@ -32,8 +29,9 @@ public struct OSEnvironment {
         return ["x86_64", "i386"].contains(deviceModel)
         #elseif os(macOS)
         return false
-        #endif
+        #else
         return false
+        #endif
     }()
 
     /// The current device model. Returns an empty string if device model cannot be retrieved.
@@ -50,21 +48,6 @@ public struct OSEnvironment {
         }
 
         return "unknown"
-    }()
-
-    /// The current operating system version. Returns an empty string if the system version cannot be
-    /// retrieved.
-    public static let systemVersion: String = {
-        #if os(iOS)
-        return UIDevice.current.systemVersion
-        #elseif os(tvOS) || os(watchOS) || os(macOS)
-        let osVersion = ProcessInfo.processInfo.operatingSystemVersion
-        var version = String(format: "%d.%d", osVersion.majorVersion, osVersion.minorVersion)
-        if 0 != osVersion.patchVersion {
-            version.append(String(format: ".%d", osVersion.patchVersion))
-        }
-        return version
-        #endif
     }()
 
     /// Indicates whether it is running inside an extension or an app.
@@ -129,7 +112,25 @@ extension OSEnvironment {
     }()
 }
 
+#if canImport(UIKit)
+import UIKit
+
 extension OSEnvironment {
+    /// The current operating system version. Returns an empty string if the system version cannot be
+    /// retrieved.
+    public static let systemVersion: String = {
+        #if os(iOS)
+        return UIDevice.current.systemVersion
+        #elseif os(tvOS) || os(watchOS) || os(macOS)
+        let osVersion = ProcessInfo.processInfo.operatingSystemVersion
+        var version = String(format: "%d.%d", osVersion.majorVersion, osVersion.minorVersion)
+        if 0 != osVersion.patchVersion {
+            version.append(String(format: ".%d", osVersion.patchVersion))
+        }
+        return version
+        #endif
+    }()
+
     public static let description: String = {
         let info: [String: Any] = [
             "hasEmbeddedMobileProvision": hasEmbeddedMobileProvision,
@@ -145,3 +146,4 @@ extension OSEnvironment {
         return "\(info)"
     }()
 }
+#endif
