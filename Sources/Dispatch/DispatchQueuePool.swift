@@ -27,11 +27,11 @@ extension DispatchContext {
         return count
     }
 
-    fileprivate static let userInteractive: DispatchContext = .init(name: "bar.foo.queue.qos.userInteractive", queueCount: appropriateQueueCount, qos: .userInteractive)
-    fileprivate static let userInitiated: DispatchContext = .init(name: "bar.foo.queue.qos.userInitiated", queueCount: appropriateQueueCount, qos: .userInitiated)
-    fileprivate static let utility: DispatchContext = .init(name: "bar.foo.queue.qos.utility", queueCount: appropriateQueueCount, qos: .utility)
-    fileprivate static let background: DispatchContext = .init(name: "bar.foo.queue.qos.background", queueCount: appropriateQueueCount, qos: .background)
-    fileprivate static let `default`: DispatchContext = .init(name: "bar.foo.queue.qos.default", queueCount: appropriateQueueCount, qos: .default)
+    fileprivate static let userInteractive: DispatchContext = .init(name: "com.redrainlab.queue.qos.userInteractive", queueCount: appropriateQueueCount, qos: .userInteractive)
+    fileprivate static let userInitiated: DispatchContext = .init(name: "com.redrainlab.queue.qos.userInitiated", queueCount: appropriateQueueCount, qos: .userInitiated)
+    fileprivate static let utility: DispatchContext = .init(name: "com.redrainlab.queue.qos.utility", queueCount: appropriateQueueCount, qos: .utility)
+    fileprivate static let background: DispatchContext = .init(name: "com.redrainlab.queue.qos.background", queueCount: appropriateQueueCount, qos: .background)
+    fileprivate static let `default`: DispatchContext = .init(name: "com.redrainlab.queue.qos.default", queueCount: appropriateQueueCount, qos: .default)
 }
 
 final class DispatchQueuePool {

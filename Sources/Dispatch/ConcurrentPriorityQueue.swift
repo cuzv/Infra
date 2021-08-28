@@ -43,9 +43,21 @@ public final class ConcurrentPriorityQueue {
     private var idToTask: [String: TaskItem] = [:]
     private var priprityToTasks: [Int: OrderedSet<TaskItem>] = [:]
 
-    public init(label: String, qos: DispatchQoS = .unspecified, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency = .inherit, target: DispatchQueue? = nil, maxConcurrentCount: Int = .max) {
+    public init(
+        label: String,
+        qos: DispatchQoS = .unspecified,
+        autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency = .inherit,
+        target: DispatchQueue? = nil,
+        maxConcurrentCount: Int = .max
+    ) {
         gatekeeperQueue = .init(label: "Gatekeeper4\(label)")
-        concurrentQueue = .init(label: label, qos: qos, attributes: [.concurrent], autoreleaseFrequency: autoreleaseFrequency, target: target)
+        concurrentQueue = .init(
+            label: label,
+            qos: qos,
+            attributes: [.concurrent],
+            autoreleaseFrequency: autoreleaseFrequency,
+            target: target
+        )
         semaphore = maxConcurrentCount < 1 ? 1 : maxConcurrentCount > ProcessInfo.processInfo.activeProcessorCount ? ProcessInfo.processInfo.activeProcessorCount : maxConcurrentCount
     }
 

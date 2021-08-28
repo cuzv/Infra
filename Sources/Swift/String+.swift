@@ -13,20 +13,20 @@ extension String {
         trimmingCharacters(in: CharacterSet(charactersIn: str))
     }
 
-    public func urlDecoding() -> String {
+    public func urlDecoded() -> String {
         removingPercentEncoding ?? self
     }
 
     public mutating func urlDecode() {
-        self = urlDecoding()
+        self = urlDecoded()
     }
 
-    public func urlEncoding() -> String {
+    public func urlEncoded() -> String {
         addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? self
     }
 
     public mutating func urlEncode() {
-        self = urlEncoding()
+        self = urlEncoded()
     }
 
     public func encodingPercent(withAllowedCharacters allowedCharacters: CharacterSet) -> String {
@@ -165,7 +165,7 @@ extension String {
         let midIndex = letters.index(letters.startIndex, offsetBy: letters.count / 2)
         let firstHalf = letters[letters.startIndex..<midIndex]
         let secondHalf = letters[midIndex..<letters.endIndex].reversed()
-        return !zip(firstHalf, secondHalf).contains(where: { $0.lowercased() != $1.lowercased() })
+        return !Swift.zip(firstHalf, secondHalf).contains(where: { $0.lowercased() != $1.lowercased() })
     }
 }
 
@@ -207,7 +207,7 @@ extension String {
     // a: 97, z: 122
     // A: 65, Z: 90
 
-    public func encodeLetters() -> String {
+    public func encodingLetters() -> String {
         var result = [String.Element]()
 
         for ch in self {
@@ -235,7 +235,7 @@ extension String {
         return String(result)
     }
 
-    public func decodeLetters() -> String {
+    public func decodingLetters() -> String {
         var result = [String.Element]()
 
         for ch in self {

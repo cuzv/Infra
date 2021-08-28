@@ -37,7 +37,7 @@ public struct Log {
     public static func out(
         _ message: @autoclosure () -> Any,
         label: String? = nil,
-        level: Level = .info,
+        level: Level = .debug,
         provider: LogProvider = OSLog.default,
         file: String = #file,
         function: String = #function,
@@ -96,21 +96,43 @@ public struct Log {
 extension OSLog {
     @available(OSX 10.14, iOS 10.0, watchOS 5.0, tvOS 12.0, *)
     public convenience init(category: String) {
-        self.init(subsystem: Bundle.main.bundleIdentifier ?? "bar.foor", category: category)
+        self.init(subsystem: Bundle.main.bundleIdentifier ?? "com.redrainlab", category: category)
     }
 
     @available(OSX 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
     public convenience init(category: Category) {
-        self.init(subsystem: Bundle.main.bundleIdentifier ?? "bar.foo", category: category)
+        self.init(subsystem: Bundle.main.bundleIdentifier ?? "com.redrainlab", category: category)
     }
 
     @available(OSX 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
-    public static let pointsOfInterest = OSLog(subsystem: (Bundle.main.bundleIdentifier ?? "bar.foor") + ".activities", category: .pointsOfInterest)
+    public static let pointsOfInterest = OSLog(subsystem: (Bundle.main.bundleIdentifier ?? "com.redrainlab") + ".activities", category: .pointsOfInterest)
 }
 
 @available(OSX 10.14, iOS 10.0, watchOS 5.0, tvOS 12.0, *)
 public protocol LogProvider {
     var log: OSLog { get }
+}
+
+@available(OSX 10.14, iOS 10.0, watchOS 5.0, tvOS 12.0, *)
+public extension LogProvider {
+    func out(
+        _ message: @autoclosure () -> Any,
+        label: String? = nil,
+        level: Log.Level = .debug,
+        file: String = #file,
+        function: String = #function,
+        line: Int = #line
+    ) {
+        Log.out(
+            message(),
+            label: label,
+            level: level,
+            provider: self,
+            file: file,
+            function: function,
+            line: line
+        )
+    }
 }
 
 @available(OSX 10.14, iOS 10.0, watchOS 5.0, tvOS 12.0, *)

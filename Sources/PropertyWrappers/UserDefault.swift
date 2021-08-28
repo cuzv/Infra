@@ -36,7 +36,7 @@ public struct UserDefault<Value: PropertyListConvertible> {
         self.defaultValue = defaultValue
         self.userDefaults = userDefaults
         // Register default value with user defaults
-        if let defaultValue = defaultValue() as? OptionalProtocol {
+        if let defaultValue = defaultValue() as? Optionality {
             /// `nil` or `NSNull` are not valid property list values.
             // This means we can't register a `nil` default value and we can't distinguish between
             // "value not present" and "values was explicitly set to nil". This makes `nil` the only
@@ -64,7 +64,7 @@ public struct UserDefault<Value: PropertyListConvertible> {
             return value
         }
         nonmutating set {
-            if let optional = newValue as? OptionalProtocol, optional.isNil {
+            if let optional = newValue as? Optionality, optional.isNil {
                 userDefaults.removeObject(forKey: key)
             } else {
                 userDefaults.set(newValue.propertyListValue, forKey: key)
@@ -166,7 +166,7 @@ extension PropertyListConvertible where Self: Codable, Self.Storage == [String: 
 extension UUID: PropertyListConvertible {
     public var propertyListValue: String { uuidString }
 
-    public init?(propertyListValue plistString: Storage) {
+    public init?(propertyListValue plistString: String) {
         self.init(uuidString: plistString)
     }
 }
@@ -280,14 +280,3 @@ extension Optional: PropertyListNativelyStorable where Wrapped: PropertyListNati
 extension Array: PropertyListNativelyStorable where Element: PropertyListNativelyStorable {}
 
 extension Dictionary: PropertyListNativelyStorable where Key == String {}
-
-// MARK: - OptionalProtocol
-/// A marker protocol for Optionals.
-/// Used to identify optional values in type casts in generic contexts.
-protocol OptionalProtocol {
-    var isNil: Bool { get }
-}
-
-extension Optional: OptionalProtocol {
-    var isNil: Bool { self == nil }
-}

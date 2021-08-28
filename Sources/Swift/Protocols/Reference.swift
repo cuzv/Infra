@@ -1,10 +1,10 @@
 import Foundation
 
-public protocol Reference: class {}
+public protocol Reference: AnyObject {}
 
 extension NSObject: Reference {}
 
-extension Reference where Self: AnyObject {
+extension Reference {
     public func weak(_ action: @escaping (Self) -> () -> Void) -> () -> Void {
         return { [weak base = self] in
             if let target = base {
@@ -52,7 +52,21 @@ extension Reference where Self: AnyObject {
             }
         }
     }
+}
 
+extension Reference {
+    public func weak<In, Out>(_ action: @escaping (Self) -> (In) -> Out, defaultValue: @autoclosure @escaping () -> Out) -> (In) -> Out {
+        return { [weak base = self] input in
+            if let target = base {
+                return action(target)(input)
+            } else {
+                return defaultValue()
+            }
+        }
+    }
+}
+
+extension Reference {
     public func unowned(_ action: @escaping (Self) -> () -> Void) -> () -> Void {
         return { [unowned base = self] in
             action(base)()
@@ -86,18 +100,6 @@ extension Reference where Self: AnyObject {
     public func unowned<A, B, C, D, E>(_ action: @escaping (Self) -> (A, B, C, D, E) -> Void) -> (A, B, C, D, E) -> Void {
         return { [unowned base = self] a, b, c, d, e in
             action(base)(a, b, c, d, e)
-        }
-    }
-}
-
-extension Reference where Self: AnyObject {
-    public func weak<In, Out>(_ action: @escaping (Self) -> (In) -> Out, defaultValue: @autoclosure @escaping () -> Out) -> (In) -> Out {
-        return { [weak base = self] input in
-            if let target = base {
-                return action(target)(input)
-            } else {
-                return defaultValue()
-            }
         }
     }
 }

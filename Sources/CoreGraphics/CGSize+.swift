@@ -28,16 +28,21 @@ extension CGSize {
 }
 
 extension CGSize {
-    public func scaleAspectFit(to boundingSize: CGSize) -> CGSize {
+    /// Equal to size of `AVMakeRect(aspectRatio:insideRect:)`
+    public func scaled(aspectFit boundingSize: CGSize) -> CGSize {
+        precondition(width != 0 && height != 0)
+        precondition(boundingSize.width != 0 && boundingSize.height != 0)
+
         let scale = min(boundingSize.width / width, boundingSize.height / height)
-        return applying(CGAffineTransform(scaleX: scale, y: scale))
+        return applying(.init(scaleX: scale, y: scale))
     }
 
-    public func scaleAspectFill(to boundingSize: CGSize) -> CGSize {
+    public func scaled(aspectFill boundingSize: CGSize) -> CGSize {
+        precondition(width != 0 && height != 0)
+        precondition(boundingSize.width != 0 && boundingSize.height != 0)
+
         let scale = max(boundingSize.width / width, boundingSize.height / height)
-        let aWidth = min(width * scale, boundingSize.width)
-        let aHeight = min(height * scale, boundingSize.height)
-        return .init(width: aWidth, height: aHeight)
+        return applying(.init(scaleX: scale, y: scale))
     }
 }
 
@@ -80,5 +85,11 @@ extension CGSize {
     public static func *= (lhs: inout CGSize, scalar: CGFloat) {
         lhs.width *= scalar
         lhs.height *= scalar
+    }
+}
+
+extension CGSize {
+    public init(length: CGFloat) {
+        self.init(width: length, height: length)
     }
 }

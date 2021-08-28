@@ -22,19 +22,25 @@ extension CGRect {
         .init(x: floor(origin.x), y: floor(origin.y), width: floor(width), height: floor(height))
     }
 
-    public func scaleAspectFit(to boundingRect: CGRect) -> CGRect {
+    public func scaled(aspectFit boundingRect: CGRect) -> CGRect {
+        precondition(width != 0)
+        precondition(height != 0)
+
         let scale = min(boundingRect.width / width, boundingRect.height / height)
         let targetSize = size.applying(.init(scaleX: scale, y: scale))
         return .init(center: boundingRect.center, size: targetSize)
     }
 
-    public func scaleAspectFill(to boundingRect: CGRect) -> CGRect {
+    public func scaled(aspectFill boundingRect: CGRect) -> CGRect {
+        precondition(width != 0)
+        precondition(height != 0)
+
         let scale = max(boundingRect.width / width, boundingRect.height / height)
         let targetSize = size.applying(.init(scaleX: scale, y: scale))
         return .init(center: boundingRect.center, size: targetSize)
     }
 
-    public func centering(to boundingRect: CGRect) -> CGRect {
+    public func center(within boundingRect: CGRect) -> CGRect {
         offsetBy(dx: boundingRect.midX - midX, dy: boundingRect.midY - midY)
     }
 }
