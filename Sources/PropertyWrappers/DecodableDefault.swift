@@ -80,6 +80,10 @@ extension DecodableDefault {
         public enum EmptyMap<T: Map>: Source {
             public static var defaultValue: T { [:] }
         }
+
+        public enum Timestamp: Source {
+            public static var defaultValue: Double { Date().timeIntervalSince1970 }
+        }
     }
 }
 
@@ -118,6 +122,7 @@ extension DecodableDefault {
     public typealias Dbl = Wrapper<Double>
     public typealias Flt = Wrapper<Float>
     public typealias Url = Wrapper<URL>
+    public typealias Timestamp = Wrapper<Sources.Timestamp>
 }
 
 // MARK: -
