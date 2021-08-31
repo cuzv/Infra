@@ -5,7 +5,7 @@ extension NumberFormatter {
         numberStyle: Style,
         locale: Locale = .current,
         roundingMode: RoundingMode = .halfUp,
-        maximumFractionDigits: Int = 0,
+        maximumFractionDigits: Int = 2,
         maximumIntegerDigits: Int = 42,
         maximumSignificantDigits: Int = 6,
         usesSignificantDigits: Bool = false,
