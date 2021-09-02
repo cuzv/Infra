@@ -541,6 +541,7 @@ extension LazyFilterSequence {
 // MARK: - Sort
 
 extension Sequence {
+    @inlinable
     public func sorted<T: Comparable>(
         by keyPath: KeyPath<Element, T>
     ) -> [Element] {
@@ -549,6 +550,7 @@ extension Sequence {
         }
     }
 
+    @inlinable
     public func sorted<T: Comparable>(
         by keyPath: KeyPath<Element, T?>
     ) -> [Element] {
@@ -561,6 +563,7 @@ extension Sequence {
         }
     }
 
+    @inlinable
     public func sorted<M: Comparable, S: Comparable>(
         by majorKeyPath: KeyPath<Element, M>,
         backup secondaryKeyPath: KeyPath<Element, S>
@@ -581,22 +584,48 @@ extension Sequence {
 
 // MARK: - Unique
 
+extension Sequence {
+    /// Returns a new stable array containing the elements of this sequence that do not occur in the given sequence.
+    ///
+    /// - Complexity: O(*n*), where *n* is the length of this sequence.
+    @inlinable
+    public func subtracting<Other: Sequence, Subject: Hashable>(
+        _ other: Other,
+        on projection: (Element) throws -> Subject
+    ) rethrows -> [Element] where Other.Element == Element {
+        var seen = try Set<Subject>(other.map(projection))
+        return try filter {
+            try seen.insert(projection($0)).inserted
+        }
+    }
+
+    /// - Complexity: O(*n*), where *n* is the length of this sequence.
+    @inlinable
+    public func removingDuplicates<Subject: Hashable>(
+        on projection: (Element) throws -> Subject
+    ) rethrows -> [Iterator.Element] {
+        try subtracting([], on: projection)
+    }
+}
+
 extension Sequence where Iterator.Element: Hashable {
-    /// Complexity: o(N)
+    /// - Complexity: O(*n*), where *n* is the length of this sequence.
+    @inlinable
     public var uniqued: [Iterator.Element] {
         removingDuplicates()
     }
 
-    /// Complexity: o(N)
+    /// - Complexity: O(*n*), where *n* is the length of this sequence.
+    @inlinable
     public func removingDuplicates() -> [Iterator.Element] {
-        subtracting([])
+        removingDuplicates(on: \.hashValue)
     }
 
-    /// Returns a new array containing the elements of this array that do not occur in the given array.
+    /// Returns a new stable array containing the elements of this sequence that do not occur in the given sequence.
     ///
-    /// Complexity: o(N)
+    /// - Complexity: O(*n*), where *n* is the length of this sequence.
+    @inlinable
     public func subtracting<S: Sequence>(_ other: S) -> [Iterator.Element] where S.Element == Element {
-        var seen = Set<Iterator.Element>(other)
-        return filter { seen.insert($0).inserted }
+        subtracting(other, on: \.hashValue)
     }
 }
