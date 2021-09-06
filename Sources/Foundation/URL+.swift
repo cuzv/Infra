@@ -20,52 +20,67 @@ extension URL {
         }
     }
 
-    public func queryParameters() -> [String: String] {
-        guard
-            let components = URLComponents(url: self, resolvingAgainstBaseURL: false),
-            let queryItems = components.queryItems
-        else {
-            return [:]
+    public var queryItems: [URLQueryItem] {
+        get { URLComponents(url: self, resolvingAgainstBaseURL: true)?.queryItems ?? [] }
+        mutating set {
+            if var components = URLComponents(url: self, resolvingAgainstBaseURL: true) {
+                components.queryItems = newValue.isEmpty ? nil : newValue
+                if let url = components.url {
+                    self = url
+                }
+            }
         }
-
-        let pairs = queryItems.map({ ($0.name, $0.value) }).compactMap({ $0 as? (String, String) })
-        let result = Dictionary(pairs, uniquingKeysWith: { $1 })
-        return result
     }
 
-    public func appendingQueryParameters(_ parameters: [String: String]) -> URL {
-        guard var urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return self }
-        var items = urlComponents.queryItems ?? []
-        items += parameters.map({ URLQueryItem(name: $0, value: $1) })
-        urlComponents.queryItems = items
-        return urlComponents.url ?? self
+    public func appendingQueryItems(_ items: [URLQueryItem]) -> URL {
+        if var components = URLComponents(url: self, resolvingAgainstBaseURL: true) {
+            var queryItems = components.queryItems ?? []
+            queryItems.append(contentsOf: items)
+            components.queryItems = queryItems
+            return components.url ?? self
+        } else {
+            return self
+        }
     }
 
-    public mutating func appendQueryParameters(_ parameters: [String: String]) {
-        self = appendingQueryParameters(parameters)
+    public mutating func appendQueryItems(_ items: [URLQueryItem]) {
+        self = appendingQueryItems(items)
     }
 
-    public func queryValue(for key: String) -> String? {
-        URLComponents(string: absoluteString)?
+    public func deletingQueryItems() -> URL {
+        if var components = URLComponents(url: self, resolvingAgainstBaseURL: true) {
+            components.queryItems = nil
+            return components.url ?? self
+        } else {
+            return self
+        }
+    }
+
+    public mutating func deleteQueryItems() {
+        self = deletingQueryItems()
+    }
+
+    public func queryValue(for key: String) -> [String] {
+        URLComponents(url: self, resolvingAgainstBaseURL: true)?
             .queryItems?
-            .first(where: { $0.name == key })?
-            .value
+            .filter {
+                $0.name == key
+            }
+            .compactMap(\.value)
+            ??
+            []
     }
 
     public func identicalTo(_ other: URL) -> Bool {
-        autoreleasepool { resolvingSymlinksInPath() == other.resolvingSymlinksInPath() }
+        resolvingSymlinksInPath() == other.resolvingSymlinksInPath()
     }
 
     public func contains(_ other: URL) -> Bool {
-        autoreleasepool {
-            resolvingSymlinksInPath()
-                .absoluteString
-                .lowercased()
-                .contains(
-                    other.resolvingSymlinksInPath()
-                        .absoluteString
-                        .lowercased()
-                )
-        }
+        resolvingSymlinksInPath()
+            .absoluteString
+            .range(
+                of: other.resolvingSymlinksInPath().absoluteString,
+                options: [.caseInsensitive]
+            ) != nil
     }
 }
