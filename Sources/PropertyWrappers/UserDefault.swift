@@ -27,77 +27,77 @@ import Foundation
 /// Source: Extended from a base implementation shown in [Swift Evolution proposal SE-0258](https://github.com/apple/swift-evolution/blob/master/proposals/0258-property-wrappers.md)
 @propertyWrapper
 public struct UserDefault<Value: PropertyListConvertible> {
-    public let key: String
-    public let defaultValue: () -> Value
-    public let userDefaults: UserDefaults
+  public let key: String
+  public let defaultValue: () -> Value
+  public let userDefaults: UserDefaults
 
-    public init(key: String, defaultValue: @autoclosure @escaping () -> Value, userDefaults: UserDefaults = .standard) {
-        self.key = key
-        self.defaultValue = defaultValue
-        self.userDefaults = userDefaults
-        // Register default value with user defaults
-        if let defaultValue = defaultValue() as? Optionality {
-            /// `nil` or `NSNull` are not valid property list values.
-            // This means we can't register a `nil` default value and we can't distinguish between
-            // "value not present" and "values was explicitly set to nil". This makes `nil` the only
-            // safe choice as a default value.
-            precondition(defaultValue.isNil, """
+  public init(key: String, defaultValue: @autoclosure @escaping () -> Value, userDefaults: UserDefaults = .standard) {
+    self.key = key
+    self.defaultValue = defaultValue
+    self.userDefaults = userDefaults
+    // Register default value with user defaults
+    if let defaultValue = defaultValue() as? Optionality {
+      /// `nil` or `NSNull` are not valid property list values.
+      // This means we can't register a `nil` default value and we can't distinguish between
+      // "value not present" and "values was explicitly set to nil". This makes `nil` the only
+      // safe choice as a default value.
+      precondition(defaultValue.isNil, """
         The default value for optional UserDefault properties must be nil. \
         nil or NSNull are not valid property list values. This means we can't distinguish between \
         "value not present" and "values was explicitly set to nil". \
         This makes `nil` the only safe choice as a default value.
         """)
-            // Do nothing else. We can't register `nil` as the default value.
-        } else {
-            userDefaults.register(defaults: [key: defaultValue().propertyListValue])
-        }
+      // Do nothing else. We can't register `nil` as the default value.
+    } else {
+      userDefaults.register(defaults: [key: defaultValue().propertyListValue])
     }
+  }
 
-    public var wrappedValue: Value {
-        get {
-            // If `Value.Storage == [String: PropertyListNativelyStorable]`, the direct cast from
-            // from Any to Value.Storage fails, but it works when inserting an intermediate cast to
-            // [String: Any]. I don't know why.
-            guard let plistValue = (userDefaults.object(forKey: key) as? Value.Storage) ?? ((userDefaults.object(forKey: key) as? [String: Any]) as? Value.Storage),
-                let value = Value(propertyListValue: plistValue)
-                else { return defaultValue() }
-            return value
-        }
-        nonmutating set {
-            if let optional = newValue as? Optionality, optional.isNil {
-                userDefaults.removeObject(forKey: key)
-            } else {
-                userDefaults.set(newValue.propertyListValue, forKey: key)
-            }
-        }
+  public var wrappedValue: Value {
+    get {
+      // If `Value.Storage == [String: PropertyListNativelyStorable]`, the direct cast from
+      // from Any to Value.Storage fails, but it works when inserting an intermediate cast to
+      // [String: Any]. I don't know why.
+      guard let plistValue = (userDefaults.object(forKey: key) as? Value.Storage) ?? ((userDefaults.object(forKey: key) as? [String: Any]) as? Value.Storage),
+            let value = Value(propertyListValue: plistValue)
+      else { return defaultValue() }
+      return value
     }
+    nonmutating set {
+      if let optional = newValue as? Optionality, optional.isNil {
+        userDefaults.removeObject(forKey: key)
+      } else {
+        userDefaults.set(newValue.propertyListValue, forKey: key)
+      }
+    }
+  }
 }
 
 // MARK: - PropertyListConvertible
 /// A type that can convert itself to and from a plist-compatible type (for storage in a plist).
 public protocol PropertyListConvertible {
-    /// The type that's used for storage in the plist.
-    associatedtype Storage: PropertyListNativelyStorable
+  /// The type that's used for storage in the plist.
+  associatedtype Storage: PropertyListNativelyStorable
 
-    /// Creates an instance from its property list representation.
-    ///
-    /// The default implementation for PropertyListStorage == Self uses `propertyListValue` directly as `self`.
-    ///
-    /// - Returns: `nil` if the conversion failed.
-    init?(propertyListValue plistValue: Storage)
+  /// Creates an instance from its property list representation.
+  ///
+  /// The default implementation for PropertyListStorage == Self uses `propertyListValue` directly as `self`.
+  ///
+  /// - Returns: `nil` if the conversion failed.
+  init?(propertyListValue plistValue: Storage)
 
-    /// The property list representation of `self`.
-    /// The default implementation for PropertyListStorage == Self returns `self`.
-    var propertyListValue: Storage { get }
+  /// The property list representation of `self`.
+  /// The default implementation for PropertyListStorage == Self returns `self`.
+  var propertyListValue: Storage { get }
 }
 
 /// Default implementation for native property list types that don't need any conversion.
 extension PropertyListConvertible where Storage == Self {
-    public init?(propertyListValue plistValue: Self) {
-        self = plistValue
-    }
+  public init?(propertyListValue plistValue: Self) {
+    self = plistValue
+  }
 
-    public var propertyListValue: Self { self }
+  public var propertyListValue: Self { self }
 }
 
 extension String: PropertyListConvertible { public typealias Storage = Self }
@@ -133,42 +133,42 @@ extension Data: PropertyListConvertible { public typealias Storage = Self }
 ///   (`KeyedEncodingContainer`) and not as an array (`UnkeyedEncodingContainer`) or as a
 ///   single value (`SingleValueEncodingContainer`).
 extension PropertyListConvertible where Self: Codable, Self.Storage == [String: PropertyListNativelyStorable] {
-    public init?(propertyListValue plistDict: [String: PropertyListNativelyStorable]) {
-        let decoder = PropertyListDecoder()
-        do {
-            let plistData = try PropertyListSerialization.data(fromPropertyList: plistDict, format: .binary, options: 0)
-            let parsedValue = try decoder.decode(Self.self, from: plistData)
-            self = parsedValue
-        } catch {
-            assertionFailure("Unable to decode plist dictionary for type \(Self.self) stored in user defaults")
-            return nil
-        }
+  public init?(propertyListValue plistDict: [String: PropertyListNativelyStorable]) {
+    let decoder = PropertyListDecoder()
+    do {
+      let plistData = try PropertyListSerialization.data(fromPropertyList: plistDict, format: .binary, options: 0)
+      let parsedValue = try decoder.decode(Self.self, from: plistData)
+      self = parsedValue
+    } catch {
+      assertionFailure("Unable to decode plist dictionary for type \(Self.self) stored in user defaults")
+      return nil
     }
+  }
 
-    public var propertyListValue: [String: PropertyListNativelyStorable] {
-        let encoder = PropertyListEncoder()
-        encoder.outputFormat = .binary
-        do {
-            let plistData = try encoder.encode(self)
-            guard let plist = try (PropertyListSerialization.propertyList(from: plistData, format: nil) as? [String: Any])?.compactMapValues({ $0 as? PropertyListNativelyStorable }) else {
-                assertionFailure("Property list representation of \(Self.self) must be a string-keyed dictionary")
-                return [:]
-            }
-            return plist
-        } catch {
-            assertionFailure("Unable to create property list representation for type \(Self.self) for storage in user defaults")
-            return [:]
-        }
+  public var propertyListValue: [String: PropertyListNativelyStorable] {
+    let encoder = PropertyListEncoder()
+    encoder.outputFormat = .binary
+    do {
+      let plistData = try encoder.encode(self)
+      guard let plist = try (PropertyListSerialization.propertyList(from: plistData, format: nil) as? [String: Any])?.compactMapValues({ $0 as? PropertyListNativelyStorable }) else {
+        assertionFailure("Property list representation of \(Self.self) must be a string-keyed dictionary")
+        return [:]
+      }
+      return plist
+    } catch {
+      assertionFailure("Unable to create property list representation for type \(Self.self) for storage in user defaults")
+      return [:]
     }
+  }
 }
 
 /// UUID stores itself as a String
 extension UUID: PropertyListConvertible {
-    public var propertyListValue: String { uuidString }
+  public var propertyListValue: String { uuidString }
 
-    public init?(propertyListValue plistString: String) {
-        self.init(uuidString: plistString)
-    }
+  public init?(propertyListValue plistString: String) {
+    self.init(uuidString: plistString)
+  }
 }
 
 /// Optionals can be stored in a property list if they wrap a PropertyListConvertible type
@@ -178,58 +178,58 @@ extension UUID: PropertyListConvertible {
 ///   "value not present" and "values was explicitly set to nil".
 ///   This makes `nil` the only safe choice as a default value.
 extension Optional: PropertyListConvertible where Wrapped: PropertyListConvertible {
-    public init?(propertyListValue plistValue: Wrapped.Storage?) {
-        guard let storedValue = plistValue else { return nil }
-        self = Wrapped(propertyListValue: storedValue)
-    }
+  public init?(propertyListValue plistValue: Wrapped.Storage?) {
+    guard let storedValue = plistValue else { return nil }
+    self = Wrapped(propertyListValue: storedValue)
+  }
 
-    public var propertyListValue: Wrapped.Storage? {
-        return self?.propertyListValue
-    }
+  public var propertyListValue: Wrapped.Storage? {
+    return self?.propertyListValue
+  }
 }
 
 /// Arrays convert themselves to their property list representation by converting each element to
 /// its plist representation.
 extension Array: PropertyListConvertible where Element: PropertyListConvertible {
-    /// Returns `nil` if one or more elements can't be converted.
-    public init?(propertyListValue plistArray: [Element.Storage]) {
-        var result: [Element] = []
-        result.reserveCapacity(plistArray.count)
-        for plistElement in plistArray {
-            guard let element = Element(propertyListValue: plistElement) else {
-                // Abort if one or more elements can't be created.
-                return nil
-            }
-            result.append(element)
-        }
-        self = result
+  /// Returns `nil` if one or more elements can't be converted.
+  public init?(propertyListValue plistArray: [Element.Storage]) {
+    var result: [Element] = []
+    result.reserveCapacity(plistArray.count)
+    for plistElement in plistArray {
+      guard let element = Element(propertyListValue: plistElement) else {
+        // Abort if one or more elements can't be created.
+        return nil
+      }
+      result.append(element)
     }
+    self = result
+  }
 
-    public var propertyListValue: [Element.Storage] {
-        map { $0.propertyListValue }
-    }
+  public var propertyListValue: [Element.Storage] {
+    map { $0.propertyListValue }
+  }
 }
 
 extension Dictionary: PropertyListConvertible where Key == String, Value: PropertyListConvertible {
-    /// Returns `nil` if one or more elements can't be converted.
-    public init?(propertyListValue plistDict: [Key: Value.Storage]) {
-        var result: [Key: Value] = [:]
-        result.reserveCapacity(plistDict.count)
-        for (key, plistValue) in plistDict {
-            guard let value = Value(propertyListValue: plistValue) else {
-                // Abort if one or more elements can't be created.
-                return nil
-            }
-            result[key] = value
-        }
-        self = result
+  /// Returns `nil` if one or more elements can't be converted.
+  public init?(propertyListValue plistDict: [Key: Value.Storage]) {
+    var result: [Key: Value] = [:]
+    result.reserveCapacity(plistDict.count)
+    for (key, plistValue) in plistDict {
+      guard let value = Value(propertyListValue: plistValue) else {
+        // Abort if one or more elements can't be created.
+        return nil
+      }
+      result[key] = value
     }
+    self = result
+  }
 
-    public var propertyListValue: [Key: Value.Storage] {
-        mapValues { value in
-            value.propertyListValue
-        }
+  public var propertyListValue: [Key: Value.Storage] {
+    mapValues { value in
+      value.propertyListValue
     }
+  }
 }
 
 // MARK: - PropertyListNativelyStorable
