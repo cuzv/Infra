@@ -48,11 +48,16 @@ extension DispatchQueue {
     }
   }
 
-  public func delay(timeInterval: DispatchTimeInterval, execute work: DispatchWorkItem) {
+  public func delay(
+    timeInterval: DispatchTimeInterval,
+    execute work: DispatchWorkItem
+  ) {
     asyncAfter(deadline: .now() + timeInterval, execute: work)
   }
 
-  public func async(execute asyncTask: @escaping (@escaping () -> Void) -> Void) {
+  public func async(
+    execute asyncTask: @escaping (@escaping () -> Void) -> Void
+  ) {
     precondition(self != .main)
 
     async {

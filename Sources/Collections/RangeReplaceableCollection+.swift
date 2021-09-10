@@ -22,7 +22,10 @@ extension RangeReplaceableCollection where Element: Equatable {
   }
 
   @discardableResult
-  public mutating func replaceFirst(_ element: Element, with newElement: Element) -> Bool {
+  public mutating func replaceFirst(
+    _ element: Element,
+    with newElement: Element
+  ) -> Bool {
     let index = firstIndex { $0 == element }
     if let index = index {
       remove(at: index)

@@ -76,7 +76,12 @@ extension Tuple3: Codable where Left: Codable, Center: Codable, Right: Codable {
   }
 }
 
-extension Tuple3: Equatable where Left: Equatable, Center: Equatable, Right: Equatable {
+extension Tuple3: Equatable
+where
+  Left: Equatable,
+  Center: Equatable,
+  Right: Equatable
+{
   public static func == (lhs: Tuple3, rhs: Tuple3) -> Bool {
     lhs.left == rhs.left && lhs.center == rhs.center && lhs.right == rhs.right
   }

@@ -7,10 +7,25 @@ public final class ConcurrentQueue {
   private let concurrentQueue: DispatchQueue
   private let semaphore: DispatchSemaphore
 
-  public init(label: String, qos: DispatchQoS = .unspecified, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency = .inherit, target: DispatchQueue? = nil, maxConcurrentCount count: Int = .max) {
+  public init(
+    label: String,
+    qos: DispatchQoS = .unspecified,
+    autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency = .inherit,
+    target: DispatchQueue? = nil,
+    maxConcurrentCount count: Int = .max
+  ) {
     gatekeeperQueue = .init(label: "Gatekeeper4\(label)")
-    concurrentQueue = .init(label: label, qos: qos, attributes: [.concurrent], autoreleaseFrequency: autoreleaseFrequency, target: target)
-    semaphore = .init(value: count < 1 ? 1 : count > ProcessInfo.processInfo.activeProcessorCount ? ProcessInfo.processInfo.activeProcessorCount : count)
+    concurrentQueue = .init(
+      label: label, qos: qos, attributes: [.concurrent],
+      autoreleaseFrequency: autoreleaseFrequency, target: target
+    )
+    semaphore = .init(
+      value: count < 1 ? 1 : (
+        count > ProcessInfo.processInfo.activeProcessorCount ?
+          ProcessInfo.processInfo.activeProcessorCount :
+          count
+      )
+    )
   }
 
   public func add(syncTask: @escaping () -> Void) {

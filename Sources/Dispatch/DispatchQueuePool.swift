@@ -16,7 +16,9 @@ struct DispatchContext {
 extension DispatchContext {
   init(name: String, queueCount: Int, qos: DispatchQoS) {
     self.name = name
-    self.queues = (0..<queueCount) .map { DispatchQueue(label: name + "\($0)", qos: qos) }
+    self.queues = (0..<queueCount) .map {
+      DispatchQueue(label: name + "\($0)", qos: qos)
+    }
     self.queueCount = queueCount
     self.counter = 0
   }
@@ -27,11 +29,26 @@ extension DispatchContext {
     return count
   }
 
-  fileprivate static let userInteractive: DispatchContext = .init(name: "com.redrainlab.queue.qos.userInteractive", queueCount: appropriateQueueCount, qos: .userInteractive)
-  fileprivate static let userInitiated: DispatchContext = .init(name: "com.redrainlab.queue.qos.userInitiated", queueCount: appropriateQueueCount, qos: .userInitiated)
-  fileprivate static let utility: DispatchContext = .init(name: "com.redrainlab.queue.qos.utility", queueCount: appropriateQueueCount, qos: .utility)
-  fileprivate static let background: DispatchContext = .init(name: "com.redrainlab.queue.qos.background", queueCount: appropriateQueueCount, qos: .background)
-  fileprivate static let `default`: DispatchContext = .init(name: "com.redrainlab.queue.qos.default", queueCount: appropriateQueueCount, qos: .default)
+  fileprivate static let userInteractive: DispatchContext = .init(
+    name: "com.redrainlab.queue.qos.userInteractive",
+    queueCount: appropriateQueueCount,
+    qos: .userInteractive)
+  fileprivate static let userInitiated: DispatchContext = .init(
+    name: "com.redrainlab.queue.qos.userInitiated",
+    queueCount: appropriateQueueCount,
+    qos: .userInitiated)
+  fileprivate static let utility: DispatchContext = .init(
+    name: "com.redrainlab.queue.qos.utility",
+    queueCount: appropriateQueueCount,
+    qos: .utility)
+  fileprivate static let background: DispatchContext = .init(
+    name: "com.redrainlab.queue.qos.background",
+    queueCount: appropriateQueueCount,
+    qos: .background)
+  fileprivate static let `default`: DispatchContext = .init(
+    name: "com.redrainlab.queue.qos.default",
+    queueCount: appropriateQueueCount,
+    qos: .default)
 }
 
 final class DispatchQueuePool {
@@ -47,7 +64,9 @@ final class DispatchQueuePool {
   }
 
   init(name: String, queueCount: Int, qos: DispatchQoS) {
-    let count = queueCount < 1 ? 1 : queueCount > kMaxQueueCount ? kMaxQueueCount : queueCount
+    let count = queueCount < 1 ? 1 : (
+      queueCount > kMaxQueueCount ? kMaxQueueCount : queueCount
+    )
     self.context = .init(name: name, queueCount: count, qos: qos)
   }
 

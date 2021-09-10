@@ -3,7 +3,9 @@ import CoreGraphics
 extension CGRect {
   public init(center: CGPoint, size: CGSize) {
     let translation = size.applying(.init(scaleX: -0.5, y: -0.5))
-    let origin = center.applying(.init(translationX: translation.width, y: translation.height))
+    let origin = center.applying(
+      .init(translationX: translation.width, y: translation.height)
+    )
     self.init(origin: origin, size: size)
   }
 
@@ -14,12 +16,18 @@ extension CGRect {
 
   @inline(__always)
   public var ceiled: CGRect {
-    .init(x: ceil(origin.x), y: ceil(origin.y), width: ceil(width), height: ceil(height))
+    .init(
+      x: ceil(origin.x), y: ceil(origin.y),
+      width: ceil(width), height: ceil(height)
+    )
   }
 
   @inline(__always)
   public var floored: CGRect {
-    .init(x: floor(origin.x), y: floor(origin.y), width: floor(width), height: floor(height))
+    .init(
+      x: floor(origin.x), y: floor(origin.y),
+      width: floor(width), height: floor(height)
+    )
   }
 
   public func scaled(aspectFit boundingRect: CGRect) -> CGRect {

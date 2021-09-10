@@ -6,7 +6,11 @@ public protocol Differentiable {
   var current: Value { get }
 }
 
-extension Differentiable where Value: RangeReplaceableCollection, Value.Element: Hashable {
+extension Differentiable
+where
+  Value: RangeReplaceableCollection,
+  Value.Element: Hashable
+{
   public var mergence: [Value.Element] {
     if current.isEmpty {
       return .init(last)

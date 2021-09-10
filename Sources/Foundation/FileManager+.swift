@@ -31,10 +31,17 @@ extension FileManager {
     }
   }
 
-  public func list(at url: URL, fileType: ListFileType = .visible, skipsSubdirectoryDescendants: Bool = true) -> [URL] {
+  public func list(
+    at url: URL,
+    fileType: ListFileType = .visible,
+    skipsSubdirectoryDescendants: Bool = true
+  ) -> [URL] {
     let keys: [URLResourceKey] = [.isRegularFileKey]
 
-    var options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants]
+    var options: FileManager.DirectoryEnumerationOptions = [
+      .skipsHiddenFiles,
+      .skipsPackageDescendants,
+    ]
     if skipsSubdirectoryDescendants {
       options.insert(.skipsSubdirectoryDescendants)
     }
@@ -44,7 +51,10 @@ extension FileManager {
       includingPropertiesForKeys: keys,
       options: options
     ) {
-      return Array(enumerator.lazy.compactMap({ $0 as? URL }).filter(fileType.isIncluded))
+      return Array(
+        enumerator.lazy.compactMap({ $0 as? URL })
+          .filter(fileType.isIncluded)
+      )
     } else {
       return []
     }

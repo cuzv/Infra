@@ -29,7 +29,9 @@ extension String {
     self = urlEncoded()
   }
 
-  public func encodingPercent(withAllowedCharacters allowedCharacters: CharacterSet) -> String {
+  public func encodingPercent(
+    withAllowedCharacters allowedCharacters: CharacterSet
+  ) -> String {
     addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? self
   }
 
@@ -50,8 +52,16 @@ extension String {
   }
 
   public func substring(in range: CountableRange<Int>) -> String? {
-    guard let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) else { return nil }
-    guard let upperIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound, limitedBy: endIndex) else { return nil }
+    guard let lowerIndex = index(
+      startIndex,
+      offsetBy: max(0, range.lowerBound),
+      limitedBy: endIndex
+    ) else { return nil }
+    guard let upperIndex = index(
+      lowerIndex,
+      offsetBy: range.upperBound - range.lowerBound,
+      limitedBy: endIndex
+    ) else { return nil }
     return String(self[lowerIndex ..< upperIndex])
   }
 
@@ -60,8 +70,16 @@ extension String {
   }
 
   public func substring(in range: ClosedRange<Int>) -> String? {
-    guard let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) else { return nil }
-    guard let upperIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound, limitedBy: endIndex) else { return nil }
+    guard let lowerIndex = index(
+      startIndex,
+      offsetBy: max(0, range.lowerBound),
+      limitedBy: endIndex
+    ) else { return nil }
+    guard let upperIndex = index(
+      lowerIndex,
+      offsetBy: range.upperBound - range.lowerBound,
+      limitedBy: endIndex
+    ) else { return nil }
     return String(self[lowerIndex ... upperIndex])
   }
 
@@ -89,20 +107,44 @@ extension String {
 
   public func position(of str: String) -> CountableRange<Int>? {
     if let range = range(of: str) {
-      return range.lowerBound.utf16Offset(in: self) ..< range.upperBound.utf16Offset(in: self)
+      return range.lowerBound.utf16Offset(
+        in: self
+      ) ..< range.upperBound.utf16Offset(in: self)
     }
     return nil
   }
 
-  public func replacingCharacters(in range: CountableRange<Int>, with: String) -> String {
-    guard let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) else { return self }
-    guard let upperIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound, limitedBy: endIndex) else { return self }
+  public func replacingCharacters(
+    in range: CountableRange<Int>,
+    with: String
+  ) -> String {
+    guard let lowerIndex = index(
+      startIndex,
+      offsetBy: max(0, range.lowerBound),
+      limitedBy: endIndex
+    ) else { return self }
+    guard let upperIndex = index(
+      lowerIndex,
+      offsetBy: range.upperBound - range.lowerBound,
+      limitedBy: endIndex
+    ) else { return self }
     return replacingCharacters(in: lowerIndex ..< upperIndex, with: with)
   }
 
-  public func replacingCharacters(in range: ClosedRange<Int>, with: String) -> String {
-    guard let lowerIndex = index(startIndex, offsetBy: max(0, range.lowerBound), limitedBy: endIndex) else { return self }
-    guard let upperIndex = index(lowerIndex, offsetBy: range.upperBound - range.lowerBound, limitedBy: endIndex) else { return self }
+  public func replacingCharacters(
+    in range: ClosedRange<Int>,
+    with: String
+  ) -> String {
+    guard let lowerIndex = index(
+      startIndex,
+      offsetBy: max(0, range.lowerBound),
+      limitedBy: endIndex
+    ) else { return self }
+    guard let upperIndex = index(
+      lowerIndex,
+      offsetBy: range.upperBound - range.lowerBound,
+      limitedBy: endIndex
+    ) else { return self }
     return replacingCharacters(in: lowerIndex ..< upperIndex, with: with)
   }
 
@@ -119,7 +161,8 @@ extension String {
   }
 
   public func base64Decoded() -> String {
-    if let decodedData = Data(base64Encoded: self), let result = String(data: decodedData, encoding: .utf8) {
+    if let decodedData = Data(base64Encoded: self),
+       let result = String(data: decodedData, encoding: .utf8) {
       return result
     }
     return self
@@ -165,7 +208,9 @@ extension String {
     let midIndex = letters.index(letters.startIndex, offsetBy: letters.count / 2)
     let firstHalf = letters[letters.startIndex..<midIndex]
     let secondHalf = letters[midIndex..<letters.endIndex].reversed()
-    return !Swift.zip(firstHalf, secondHalf).contains(where: { $0.lowercased() != $1.lowercased() })
+    return !Swift.zip(firstHalf, secondHalf).contains(where: {
+      $0.lowercased() != $1.lowercased()
+    })
   }
 }
 

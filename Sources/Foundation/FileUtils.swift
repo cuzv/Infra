@@ -13,7 +13,9 @@ public enum FileUtils {
     to directory: FileManager.SearchPathDirectory,
     fileName: String
   ) throws {
-    guard let url = FileManager.default.urls(for: directory, in: .userDomainMask).first else { return }
+    guard let url = FileManager.default.urls(
+      for: directory, in: .userDomainMask
+    ).first else { return }
     try writeJSON(value, to: url.appendingPathComponent(fileName))
   }
 
@@ -22,8 +24,14 @@ public enum FileUtils {
     try data.write(to: url)
   }
 
-  public static func delete(from directory: FileManager.SearchPathDirectory, fileName: String) throws {
-    guard let url = FileManager.default.urls(for: directory, in: .userDomainMask).first else { return }
+  public static func delete(
+    from directory: FileManager.SearchPathDirectory,
+    fileName: String
+  ) throws {
+    guard let url = FileManager.default.urls(
+      for: directory,
+      in: .userDomainMask
+    ).first else { return }
     try FileManager.default.removeItem(at: url.appendingPathComponent(fileName))
   }
 
@@ -31,7 +39,10 @@ public enum FileUtils {
     from directory: FileManager.SearchPathDirectory,
     fileName: String
   ) throws -> T {
-    guard let url = FileManager.default.urls(for: directory, in: .userDomainMask).first else {
+    guard let url = FileManager.default.urls(
+      for: directory,
+      in: .userDomainMask
+    ).first else {
       throw Failure.fileNotExist
     }
     return try loadJSON(from: url.appendingPathComponent(fileName))

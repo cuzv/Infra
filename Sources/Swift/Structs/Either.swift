@@ -27,14 +27,18 @@ public enum Either<Left, Right> {
     }
   }
 
-  public func map<NewRight>(_ f: (Right) -> NewRight) -> Either<Left, NewRight> {
+  public func map<NewRight>(
+    _ f: (Right) -> NewRight
+  ) -> Either<Left, NewRight> {
     switch self {
     case let .right(value): return .right(f(value))
     case let .left(value):  return .left(value)
     }
   }
 
-  public func flatMap<NewRight>(_ f: (Right) -> Either<Left, NewRight>) -> Either<Left, NewRight> {
+  public func flatMap<NewRight>(
+    _ f: (Right) -> Either<Left, NewRight>
+  ) -> Either<Left, NewRight> {
     switch self {
     case let .right(value): return f(value)
     case let .left(value): return .left(value)

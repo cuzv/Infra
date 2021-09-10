@@ -26,7 +26,9 @@ public struct Ref<Value> {
     nonmutating set { write(newValue) }
   }
 
-  public subscript<Result>(dynamicMember keyPath: WritableKeyPath<Value, Result>) -> Ref<Result> {
+  public subscript<Result>(
+    dynamicMember keyPath: WritableKeyPath<Value, Result>
+  ) -> Ref<Result> {
     .init(
       read: { self.wrappedValue[keyPath: keyPath] },
       write: { self.wrappedValue[keyPath: keyPath] = $0 }

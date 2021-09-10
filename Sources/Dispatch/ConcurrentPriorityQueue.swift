@@ -16,7 +16,11 @@ extension ConcurrentPriorityQueue {
       self.action = action
     }
 
-    public convenience init(id: String, priority: Int = 0, action: @escaping SyncTask) {
+    public convenience init(
+      id: String,
+      priority: Int = 0,
+      action: @escaping SyncTask
+    ) {
       let action: AsyncTask = { done in
         action()
         done()
@@ -58,7 +62,11 @@ public final class ConcurrentPriorityQueue {
       autoreleaseFrequency: autoreleaseFrequency,
       target: target
     )
-    semaphore = maxConcurrentCount < 1 ? 1 : maxConcurrentCount > ProcessInfo.processInfo.activeProcessorCount ? ProcessInfo.processInfo.activeProcessorCount : maxConcurrentCount
+    semaphore = maxConcurrentCount < 1 ? 1 : (
+      maxConcurrentCount > ProcessInfo.processInfo.activeProcessorCount ?
+        ProcessInfo.processInfo.activeProcessorCount :
+        maxConcurrentCount
+    )
   }
 
   public func addTask(_ task: TaskItem) {

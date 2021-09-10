@@ -2,7 +2,11 @@ import Dispatch
 
 @propertyWrapper
 public struct Synchronized<Value> {
-  private let queue = DispatchQueue(label: "RWQueue", qos: .userInitiated, attributes: .concurrent)
+  private let queue = DispatchQueue(
+    label: "RWQueue",
+    qos: .userInitiated,
+    attributes: .concurrent
+  )
   private var value: Value
 
   public init(wrappedValue value: Value) {

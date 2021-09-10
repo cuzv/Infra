@@ -30,7 +30,10 @@ extension Dictionary {
 }
 
 extension Dictionary {
-  public subscript(key: Key, setIfNil defaultValue: @autoclosure () -> Value) -> Value {
+  public subscript(
+    key: Key,
+    setIfNil defaultValue: @autoclosure () -> Value
+  ) -> Value {
     mutating get {
       if let value = self[key] {
         return value

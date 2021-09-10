@@ -320,7 +320,9 @@ extension LazySequence {
   }
 
   @inline(__always)
-  public func filter(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
+  public func filter(
+    _ keyPath: KeyPath<Element, Bool?>
+  ) -> LazyFilterSequence<Elements> {
     filter { true == $0[keyPath: keyPath] }
   }
 
@@ -334,7 +336,8 @@ extension LazySequence {
   @inline(__always)
   public func filter<S: Sequence>(
     _ valuesToFilter: S
-  ) -> LazyFilterSequence<Elements> where S.Element == Element, Element: Equatable {
+  ) -> LazyFilterSequence<Elements>
+  where S.Element == Element, Element: Equatable {
     filter { valuesToFilter.contains($0) }
   }
 }
@@ -346,7 +349,9 @@ extension LazyMapSequence {
   }
 
   @inline(__always)
-  public func filter(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
+  public func filter(
+    _ keyPath: KeyPath<Element, Bool?>
+  ) -> LazyFilterSequence<Elements> {
     filter { true == $0[keyPath: keyPath] }
   }
 
@@ -360,7 +365,8 @@ extension LazyMapSequence {
   @inline(__always)
   public func filter<S: Sequence>(
     _ valuesToFilter: S
-  ) -> LazyFilterSequence<Elements> where S.Element == Element, Element: Equatable {
+  ) -> LazyFilterSequence<Elements>
+  where S.Element == Element, Element: Equatable {
     filter { valuesToFilter.contains($0) }
   }
 }
@@ -405,7 +411,9 @@ extension Sequence {
   }
 
   @inline(__always)
-  public func ignore(_ notIncluded: (Element) throws -> Bool) rethrows -> [Element] {
+  public func ignore(
+    _ notIncluded: (Element) throws -> Bool
+  ) rethrows -> [Element] {
     try filter { try !notIncluded($0) }
   }
 
@@ -625,7 +633,8 @@ extension Sequence where Iterator.Element: Hashable {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this sequence.
   @inlinable
-  public func subtracting<S: Sequence>(_ other: S) -> [Iterator.Element] where S.Element == Element {
+  public func subtracting<S: Sequence>(_ other: S) -> [Iterator.Element]
+  where S.Element == Element {
     subtracting(other, on: \.hashValue)
   }
 }

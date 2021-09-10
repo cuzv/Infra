@@ -12,23 +12,27 @@ public enum DecodableDefault {}
 
 extension DecodableDefault {
   @propertyWrapper
-  public struct Wrapper<Source: DecodableDefaultSource>: CustomStringConvertible, CustomDebugStringConvertible {
+  public struct Wrapper<Source: DecodableDefaultSource> {
     public var wrappedValue: Source.Value
 
     public init(wrappedValue: Source.Value) {
       self.wrappedValue = wrappedValue
     }
+  }
+}
 
-    public var description: String {
-      if let value = wrappedValue as? CustomStringConvertible {
-        return value.description
-      }
-      return "\(wrappedValue)"
+extension DecodableDefault.Wrapper: CustomStringConvertible {
+  public var description: String {
+    if let value = wrappedValue as? CustomStringConvertible {
+      return value.description
     }
+    return "\(wrappedValue)"
+  }
+}
 
-    public var debugDescription: String {
-      description
-    }
+extension DecodableDefault.Wrapper: CustomDebugStringConvertible {
+  public var debugDescription: String {
+    description
   }
 }
 
@@ -50,6 +54,7 @@ extension KeyedDecodingContainer {
 
 extension DecodableDefault.Wrapper: Equatable where Source.Value: Equatable {}
 extension DecodableDefault.Wrapper: Hashable where Source.Value: Hashable {}
+
 extension DecodableDefault.Wrapper: Encodable where Source.Value: Encodable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()

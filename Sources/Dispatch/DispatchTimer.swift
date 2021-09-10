@@ -8,7 +8,11 @@ public final class DispatchTimer {
   private let targetQueue: DispatchQueue?
   private var isTimerInitialized: Bool = false
 
-  public init(timeInterval: TimeInterval, leeway: DispatchTimeInterval = .nanoseconds(0), targetQueue: DispatchQueue? = nil) {
+  public init(
+    timeInterval: TimeInterval,
+    leeway: DispatchTimeInterval = .nanoseconds(0),
+    targetQueue: DispatchQueue? = nil
+  ) {
     self.timeInterval = timeInterval
     self.leeway = leeway
     self.targetQueue = targetQueue
@@ -27,7 +31,11 @@ public final class DispatchTimer {
   private lazy var timer: DispatchSourceTimer = {
     isTimerInitialized = true
     let timer = DispatchSource.makeTimerSource(flags: [], queue: targetQueue)
-    timer.schedule(deadline: .now() + timeInterval, repeating: timeInterval, leeway: leeway)
+    timer.schedule(
+      deadline: .now() + timeInterval,
+      repeating: timeInterval,
+      leeway: leeway
+    )
     timer.setEventHandler(handler: { [weak self] in
       self?.eventHandler?()
     })
