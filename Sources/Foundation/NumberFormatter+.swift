@@ -5,9 +5,12 @@ extension NumberFormatter {
     numberStyle: Style,
     locale: Locale = .current,
     roundingMode: RoundingMode = .halfUp,
+    minimumFractionDigits: Int = 0,
     maximumFractionDigits: Int = 2,
+    minimumIntegerDigits: Int = 0,
     maximumIntegerDigits: Int = 42,
-    maximumSignificantDigits: Int = 6,
+    minimumSignificantDigits: Int? = nil,
+    maximumSignificantDigits: Int? = nil,
     usesSignificantDigits: Bool = false,
     positivePrefix: String? = nil
   ) {
@@ -15,9 +18,16 @@ extension NumberFormatter {
     self.numberStyle = numberStyle
     self.locale = locale
     self.roundingMode = roundingMode
+    self.minimumFractionDigits = minimumFractionDigits
     self.maximumFractionDigits = maximumFractionDigits
+    self.minimumIntegerDigits = minimumIntegerDigits
     self.maximumIntegerDigits = maximumIntegerDigits
-    self.maximumSignificantDigits = maximumSignificantDigits
+    if let digits = minimumSignificantDigits {
+      self.minimumSignificantDigits = digits
+    }
+    if let digits = maximumSignificantDigits {
+      self.maximumSignificantDigits = digits
+    }
     self.usesSignificantDigits = usesSignificantDigits
     self.positivePrefix = positivePrefix
   }
