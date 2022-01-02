@@ -14,7 +14,11 @@ public final class Observable<Value>: ObservableObject {
     set { innerValue = newValue }
   }
 
-  public var projectedValue: Published<Value>.Publisher {
+  public var projectedValue: Observable {
+    self
+  }
+
+  public var publisher: Published<Value>.Publisher {
     $innerValue
   }
 }
