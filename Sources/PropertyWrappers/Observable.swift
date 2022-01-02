@@ -21,8 +21,4 @@ public final class Observable<Value>: ObservableObject {
   public var publisher: Published<Value>.Publisher {
     $innerValue
   }
-
-  public var published: Published<Value> {
-    _innerValue
-  }
 }
