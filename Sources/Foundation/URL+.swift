@@ -84,3 +84,13 @@ extension URL {
       ) != nil
   }
 }
+
+extension URL {
+  public init?(itmsAppId: String, writeReview: Bool = false) {
+    var link = "itms-apps://itunes.apple.com/app/id\(itmsAppId)?mt=8"
+    if writeReview {
+      link.append("&action=write-review")
+    }
+    self.init(string: link)
+  }
+}
