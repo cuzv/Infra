@@ -293,9 +293,15 @@ extension Sequence {
     filter { $0 is T }
   }
 
+  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
   public func filter(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
-    filter { true == $0[keyPath: keyPath] }
+    filter(keyPath, value: true)
+  }
+
+  @inline(__always)
+  public func filter<Value: Equatable>(_ keyPath: KeyPath<Element, Value>, value: Value) -> [Element] {
+    filter { value == $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -319,11 +325,19 @@ extension LazySequence {
     filter { $0 is T }
   }
 
+  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
   public func filter(
     _ keyPath: KeyPath<Element, Bool?>
   ) -> LazyFilterSequence<Elements> {
     filter { true == $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  public func filter<Value: Equatable>(
+    _ keyPath: KeyPath<Element, Value>, value: Value
+  ) -> LazyFilterSequence<Elements> {
+    filter { value == $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -348,11 +362,19 @@ extension LazyMapSequence {
     filter { $0 is T }
   }
 
+  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
   public func filter(
     _ keyPath: KeyPath<Element, Bool?>
   ) -> LazyFilterSequence<Elements> {
     filter { true == $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  public func filter<Value: Equatable>(
+    _ keyPath: KeyPath<Element, Value>, value: Value
+  ) -> LazyFilterSequence<Elements> {
+    filter { value == $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -377,9 +399,17 @@ extension LazyFilterSequence {
     filter { $0 is T }
   }
 
+  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
   public func filter(_ keyPath: KeyPath<Element, Bool?>) -> Self {
     filter { true == $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  public func filter<Value: Equatable>(
+    _ keyPath: KeyPath<Element, Value>, value: Value
+  ) -> Self {
+    filter { value == $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -405,9 +435,17 @@ extension Sequence {
     filter { !($0 is T) }
   }
 
+  @available(*, deprecated, renamed: "ignore(_:value:)")
   @inline(__always)
   public func ignore(_ keyPath: KeyPath<Element, Bool>) -> [Element] {
     filter { !$0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  public func ignore<Value: Equatable>(
+    _ keyPath: KeyPath<Element, Value>, value: Value
+  ) -> [Element] {
+    filter { value != $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -438,6 +476,13 @@ extension LazySequence {
     _ type: T.Type
   ) -> LazyFilterSequence<Elements> {
     filter { !($0 is T) }
+  }
+
+  @inline(__always)
+  public func ignore<Value: Equatable>(
+    _ keyPath: KeyPath<Element, Value>, value: Value
+  ) -> LazyFilterSequence<Elements> {
+    filter { value != $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -476,6 +521,13 @@ extension LazyMapSequence {
     _ type: T.Type
   ) -> LazyFilterSequence<Elements> {
     filter { !($0 is T) }
+  }
+
+  @inline(__always)
+  public func ignore<Value: Equatable>(
+    _ keyPath: KeyPath<Element, Value>, value: Value
+  ) -> LazyFilterSequence<Elements> {
+    filter { value != $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -514,6 +566,13 @@ extension LazyFilterSequence {
     _ type: T.Type
   ) -> Self {
     filter { !($0 is T) }
+  }
+
+  @inline(__always)
+  public func ignore<Value: Equatable>(
+    _ keyPath: KeyPath<Element, Value>, value: Value
+  ) -> Self {
+    filter { value != $0[keyPath: keyPath] }
   }
 
   @inline(__always)
