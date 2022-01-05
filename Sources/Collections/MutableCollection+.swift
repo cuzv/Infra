@@ -9,18 +9,18 @@ extension MutableCollection {
 
 extension MutableCollection where Self: RandomAccessCollection {
   public mutating func sort<T>(
-    by keyPath: KeyPath<Element, T>
-  ) where T: Comparable {
-    sort { lhs, rhs in
-      lhs[keyPath: keyPath] < rhs[keyPath: keyPath]
+    by transform: (Element) throws -> T
+  ) rethrows where T: Comparable {
+    try sort { lhs, rhs in
+      (try transform(lhs)) < (try transform(rhs))
     }
   }
 
   public mutating func sort<T>(
-    by keyPath: KeyPath<Element, T?>
-  ) where T: Comparable {
-    sort { lhs, rhs in
-      if let lv = lhs[keyPath: keyPath], let rv = rhs[keyPath: keyPath] {
+    by transform: (Element) throws -> T?
+  ) rethrows where T: Comparable {
+    try sort { lhs, rhs in
+      if let lv = (try transform(lhs)), let rv = (try transform(rhs)) {
         return lv < rv
       } else {
         return true
@@ -29,15 +29,15 @@ extension MutableCollection where Self: RandomAccessCollection {
   }
 
   public mutating func sort<M, S>(
-    by majorKeyPath: KeyPath<Element, M>,
-    backup secondaryKeyPath: KeyPath<Element, S>
-  ) where M: Comparable, S: Comparable {
-    sort { lhs, rhs in
-      let lm = lhs[keyPath: majorKeyPath]
-      let rm = rhs[keyPath: majorKeyPath]
+    by majorTransform: (Element) throws -> M,
+    or secondaryTransform: (Element) throws -> S
+  ) rethrows where M: Comparable, S: Comparable {
+    try sort { lhs, rhs in
+      let lm = try majorTransform(lhs)
+      let rm = try majorTransform(rhs)
       if lm == rm {
-        let ls = lhs[keyPath: secondaryKeyPath]
-        let rs = rhs[keyPath: secondaryKeyPath]
+        let ls = try secondaryTransform(lhs)
+        let rs = try secondaryTransform(rhs)
         return ls < rs
       } else {
         return lm < rm

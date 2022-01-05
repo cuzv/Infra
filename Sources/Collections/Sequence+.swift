@@ -289,19 +289,15 @@ extension LazyFilterSequence {
 
 extension Sequence {
   @inline(__always)
-  public func filter<T>(_ type: T.Type) -> [Element] {
+  public func filter<T>(on type: T.Type) -> [Element] {
     filter { $0 is T }
   }
 
-  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
-  public func filter(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
-    filter(keyPath, value: true)
-  }
-
-  @inline(__always)
-  public func filter<Value: Equatable>(_ keyPath: KeyPath<Element, Value>, value: Value) -> [Element] {
-    filter { value == $0[keyPath: keyPath] }
+  public func filter<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) == value }
   }
 
   @inline(__always)
@@ -312,32 +308,31 @@ extension Sequence {
   }
 
   @inline(__always)
-  public func filter<S: Sequence>(
+  public func filter<S>(
     _ valuesToFilter: S
-  ) -> [Element] where S.Element == Element, Element: Equatable {
+  ) -> [Element] where S: Sequence, S.Element == Element, Element: Equatable {
     filter { valuesToFilter.contains($0) }
   }
 }
 
 extension LazySequence {
   @inline(__always)
-  public func filter<T>(_ type: T.Type) -> LazyFilterSequence<Base> {
+  public func filter<T>(on type: T.Type) -> LazyFilterSequence<Base> {
     filter { $0 is T }
   }
 
-  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
-  public func filter(
-    _ keyPath: KeyPath<Element, Bool?>
-  ) -> LazyFilterSequence<Elements> {
-    filter { true == $0[keyPath: keyPath] }
+  public func filter<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> LazyFilterSequence<Elements> where Value: Equatable {
+    filter { transform($0) == value }
   }
 
   @inline(__always)
-  public func filter<Value: Equatable>(
-    _ keyPath: KeyPath<Element, Value>, value: Value
-  ) -> LazyFilterSequence<Elements> {
-    filter { value == $0[keyPath: keyPath] }
+  public func filter<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) == value }
   }
 
   @inline(__always)
@@ -348,33 +343,32 @@ extension LazySequence {
   }
 
   @inline(__always)
-  public func filter<S: Sequence>(
+  public func filter<S>(
     _ valuesToFilter: S
   ) -> LazyFilterSequence<Elements>
-  where S.Element == Element, Element: Equatable {
+  where S: Sequence, S.Element == Element, Element: Equatable {
     filter { valuesToFilter.contains($0) }
   }
 }
 
 extension LazyMapSequence {
   @inline(__always)
-  public func filter<T>(_ type: T.Type) -> LazyFilterSequence<Elements> {
+  public func filter<T>(on type: T.Type) -> LazyFilterSequence<Elements> {
     filter { $0 is T }
   }
 
-  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
-  public func filter(
-    _ keyPath: KeyPath<Element, Bool?>
-  ) -> LazyFilterSequence<Elements> {
-    filter { true == $0[keyPath: keyPath] }
+  public func filter<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> LazyFilterSequence<Elements> where Value: Equatable {
+    filter { transform($0) == value }
   }
 
   @inline(__always)
-  public func filter<Value: Equatable>(
-    _ keyPath: KeyPath<Element, Value>, value: Value
-  ) -> LazyFilterSequence<Elements> {
-    filter { value == $0[keyPath: keyPath] }
+  public func filter<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) == value }
   }
 
   @inline(__always)
@@ -385,31 +379,32 @@ extension LazyMapSequence {
   }
 
   @inline(__always)
-  public func filter<S: Sequence>(
+  public func filter<S>(
     _ valuesToFilter: S
   ) -> LazyFilterSequence<Elements>
-  where S.Element == Element, Element: Equatable {
+  where S: Sequence, S.Element == Element, Element: Equatable {
     filter { valuesToFilter.contains($0) }
   }
 }
 
 extension LazyFilterSequence {
   @inline(__always)
-  public func filter<T>(_ type: T.Type) -> Self {
+  public func filter<T>(on type: T.Type) -> Self {
     filter { $0 is T }
   }
 
-  @available(*, deprecated, renamed: "filter(_:value:)")
   @inline(__always)
-  public func filter(_ keyPath: KeyPath<Element, Bool?>) -> Self {
-    filter { true == $0[keyPath: keyPath] }
+  public func filter<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> Self where Value: Equatable {
+    filter { transform($0) == value }
   }
 
   @inline(__always)
-  public func filter<Value: Equatable>(
-    _ keyPath: KeyPath<Element, Value>, value: Value
-  ) -> Self {
-    filter { value == $0[keyPath: keyPath] }
+  public func filter<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) == value }
   }
 
   @inline(__always)
@@ -420,188 +415,157 @@ extension LazyFilterSequence {
   }
 
   @inline(__always)
-  public func filter<S: Sequence>(
+  public func filter<S>(
     _ valuesToFilter: S
-  ) -> Self where S.Element == Element, Element: Equatable {
+  ) -> Self where S: Sequence, S.Element == Element, Element: Equatable {
     filter { valuesToFilter.contains($0) }
   }
 }
 
-// MARK: - Ignore
+// MARK: - Drop
 
 extension Sequence {
   @inline(__always)
-  public func ignore<T>(_ type: T.Type) -> [Element] {
-    filter { !($0 is T) }
-  }
-
-  @available(*, deprecated, renamed: "ignore(_:value:)")
-  @inline(__always)
-  public func ignore(_ keyPath: KeyPath<Element, Bool>) -> [Element] {
-    filter { !$0[keyPath: keyPath] }
+  public func drop<T>(on type: T.Type) -> DropWhileSequence<Self> {
+    drop { $0 is T }
   }
 
   @inline(__always)
-  public func ignore<Value: Equatable>(
-    _ keyPath: KeyPath<Element, Value>, value: Value
-  ) -> [Element] {
-    filter { value != $0[keyPath: keyPath] }
+  public func drop<Value>(
+    on transform: (Element) -> Value, equals value: Value
+  ) -> DropWhileSequence<Self> where Value: Equatable {
+    drop { transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ notIncluded: (Element) throws -> Bool
-  ) rethrows -> [Element] {
-    try filter { try !notIncluded($0) }
+  public func drop<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> DropWhileSequence<Self> where Value: Equatable {
+    try drop { try transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ valuesToIgnore: Element...
-  ) -> [Element] where Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
+  public func drop(
+    _ valuesToDrop: Element...
+  ) -> DropWhileSequence<Self> where Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 
   @inline(__always)
-  public func ignore<S: Sequence>(
-    _ valuesToIgnore: S
-  ) -> [Element] where S.Element == Element, Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
+  public func drop<S>(
+    _ valuesToDrop: S
+  ) -> DropWhileSequence<Self> where S: Sequence, S.Element == Element, Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 }
 
 extension LazySequence {
   @inline(__always)
-  public func ignore<T>(
+  public func drop<T>(
     _ type: T.Type
-  ) -> LazyFilterSequence<Elements> {
-    filter { !($0 is T) }
+  ) -> LazyDropWhileSequence<Elements> {
+    drop { $0 is T }
   }
 
   @inline(__always)
-  public func ignore<Value: Equatable>(
-    _ keyPath: KeyPath<Element, Value>, value: Value
-  ) -> LazyFilterSequence<Elements> {
-    filter { value != $0[keyPath: keyPath] }
+  public func drop<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> LazyDropWhileSequence<Elements> where Value: Equatable {
+    drop { transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ notIncluded: (Element) throws -> Bool
-  ) rethrows -> [Element] {
-    try filter { try !notIncluded($0) }
+  public func drop<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> DropWhileSequence<Self> where Value: Equatable {
+    try drop { try transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ notIncluded: @escaping (Element) -> Bool
-  ) -> LazyFilterSequence<Elements> {
-    filter { !notIncluded($0) }
+  public func drop(
+    _ valuesToDrop: Element...
+  ) -> LazyDropWhileSequence<Elements> where Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 
   @inline(__always)
-  public func ignore(
-    _ valuesToIgnore: Element...
-  ) -> LazyFilterSequence<Elements> where Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
-  }
-
-  @inline(__always)
-  public func ignore<S: Sequence>(
-    _ valuesToIgnore: S
-  ) -> LazyFilterSequence<Elements>
-  where S.Element == Element, Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
+  public func drop<S>(
+    _ valuesToDrop: S
+  ) -> LazyDropWhileSequence<Elements>
+  where S: Sequence, S.Element == Element, Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 }
 
 extension LazyMapSequence {
   @inline(__always)
-  public func ignore<T>(
-    _ type: T.Type
-  ) -> LazyFilterSequence<Elements> {
-    filter { !($0 is T) }
+  public func drop<T>(
+    on type: T.Type
+  ) -> LazyDropWhileSequence<Elements> {
+    drop { $0 is T }
   }
 
   @inline(__always)
-  public func ignore<Value: Equatable>(
-    _ keyPath: KeyPath<Element, Value>, value: Value
-  ) -> LazyFilterSequence<Elements> {
-    filter { value != $0[keyPath: keyPath] }
+  public func drop<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> LazyDropWhileSequence<Elements> where Value: Equatable {
+    drop { transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ notIncluded: (Element) throws -> Bool
-  ) rethrows -> [Element] {
-    try filter { try !notIncluded($0) }
+  public func drop<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> DropWhileSequence<Self> where Value: Equatable {
+    try drop { try transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ notIncluded: @escaping (Element) -> Bool
-  ) -> LazyFilterSequence<Elements> {
-    filter { !notIncluded($0) }
+  public func drop(
+    _ valuesToDrop: Element...
+  ) -> LazyDropWhileSequence<Elements> where Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 
   @inline(__always)
-  public func ignore(
-    _ valuesToIgnore: Element...
-  ) -> LazyFilterSequence<Elements> where Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
-  }
-
-  @inline(__always)
-  public func ignore<S: Sequence>(
-    _ valuesToIgnore: S
-  ) -> LazyFilterSequence<Elements>
-  where S.Element == Element, Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
+  public func drop<S>(_ valuesToDrop: S ) -> LazyDropWhileSequence<Elements>
+  where S: Sequence, S.Element == Element, Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 }
 
 extension LazyFilterSequence {
   @inline(__always)
-  public func ignore<T>(
-    _ type: T.Type
-  ) -> Self {
-    filter { !($0 is T) }
+  public func drop<T>(
+    on type: T.Type
+  ) -> LazyDropWhileSequence<Elements> {
+    drop { $0 is T }
   }
 
   @inline(__always)
-  public func ignore<Value: Equatable>(
-    _ keyPath: KeyPath<Element, Value>, value: Value
-  ) -> Self {
-    filter { value != $0[keyPath: keyPath] }
+  public func drop<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> LazyDropWhileSequence<Elements> where Value: Equatable {
+    drop { transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ notIncluded: (Element) throws -> Bool
-  ) rethrows -> [Element] {
-    try filter { try !notIncluded($0) }
+  public func drop<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> DropWhileSequence<Self> where Value: Equatable {
+    try drop { try transform($0) == value }
   }
 
   @inline(__always)
-  public func ignore(
-    _ notIncluded: @escaping (Element) -> Bool
-  ) -> Self {
-    filter { !notIncluded($0) }
+  public func drop(
+    _ valuesToDrop: Element...
+  ) -> LazyDropWhileSequence<Elements> where Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 
   @inline(__always)
-  public func ignore(
-    _ valuesToIgnore: Element...
-  ) -> Self where Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
-  }
-
-  @inline(__always)
-  public func ignore<S: Sequence>(
-    _ valuesToIgnore: S
-  ) -> Self
-  where S.Element == Element, Element: Equatable {
-    filter { !valuesToIgnore.contains($0) }
+  public func drop<S>(_ valuesToDrop: S) -> LazyDropWhileSequence<Elements>
+  where S: Sequence, S.Element == Element, Element: Equatable {
+    drop { valuesToDrop.contains($0) }
   }
 }
 
@@ -609,20 +573,20 @@ extension LazyFilterSequence {
 
 extension Sequence {
   @inlinable
-  public func sorted<T: Comparable>(
-    by keyPath: KeyPath<Element, T>
-  ) -> [Element] {
-    sorted { lhs, rhs in
-      lhs[keyPath: keyPath] < rhs[keyPath: keyPath]
+  public func sorted<T>(
+    by transform: (Element) throws -> T
+  ) rethrows -> [Element] where T: Comparable {
+    try sorted { lhs, rhs in
+      (try transform(lhs)) < (try transform(rhs))
     }
   }
 
   @inlinable
-  public func sorted<T: Comparable>(
-    by keyPath: KeyPath<Element, T?>
-  ) -> [Element] {
-    sorted { lhs, rhs in
-      if let lv = lhs[keyPath: keyPath], let rv = rhs[keyPath: keyPath] {
+  public func sorted<T>(
+    by transform: (Element) throws -> T?
+  ) rethrows -> [Element] where T: Comparable {
+    try sorted { lhs, rhs in
+      if let lv = (try transform(lhs)), let rv = (try transform(rhs)) {
         return lv < rv
       } else {
         return true
@@ -631,16 +595,16 @@ extension Sequence {
   }
 
   @inlinable
-  public func sorted<M: Comparable, S: Comparable>(
-    by majorKeyPath: KeyPath<Element, M>,
-    backup secondaryKeyPath: KeyPath<Element, S>
-  ) -> [Element] {
-    sorted { lhs, rhs in
-      let lm = lhs[keyPath: majorKeyPath]
-      let rm = rhs[keyPath: majorKeyPath]
+  public func sorted<M, S>(
+    by majorTransform: (Element) throws -> M,
+    or secondaryTransform: (Element) throws -> S
+  ) rethrows -> [Element] where M: Comparable, S: Comparable {
+    try sorted { lhs, rhs in
+      let lm = try majorTransform(lhs)
+      let rm = try majorTransform(rhs)
       if lm == rm {
-        let ls = lhs[keyPath: secondaryKeyPath]
-        let rs = rhs[keyPath: secondaryKeyPath]
+        let ls = try secondaryTransform(lhs)
+        let rs = try secondaryTransform(rhs)
         return ls < rs
       } else {
         return lm < rm
@@ -692,8 +656,8 @@ extension Sequence where Iterator.Element: Hashable {
   ///
   /// - Complexity: O(*n*), where *n* is the length of this sequence.
   @inlinable
-  public func subtracting<S: Sequence>(_ other: S) -> [Iterator.Element]
-  where S.Element == Element {
+  public func subtracting<S>(_ other: S) -> [Iterator.Element]
+  where S: Sequence, S.Element == Element {
     subtracting(other, on: \.hashValue)
   }
 }
