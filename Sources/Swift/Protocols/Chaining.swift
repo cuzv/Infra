@@ -14,9 +14,9 @@ public protocol Chaining {
 extension Chaining where Self: Any {
   @inline(__always)
   @discardableResult
-  public func assigning<T>(
-    _ value: T,
-    to keyPath: WritableKeyPath<Self, T>
+  public func assigning<V>(
+    _ value: V,
+    to keyPath: WritableKeyPath<Self, V>
   ) -> Self {
     var this = self
     this[keyPath: keyPath] = value
@@ -25,9 +25,9 @@ extension Chaining where Self: Any {
 
   @inline(__always)
   @discardableResult
-  public func assigning<M, T>(
-    _ value: T,
-    to keyPath: WritableKeyPath<M, T>,
+  public func assigning<M, V>(
+    _ value: V,
+    to keyPath: WritableKeyPath<M, V>,
     on memeber: WritableKeyPath<Self, M>
   ) -> Self {
     var this = self
@@ -39,9 +39,9 @@ extension Chaining where Self: Any {
 
   @inline(__always)
   @discardableResult
-  public func assigning<M, T>(
-    _ value: T,
-    to keyPath: WritableKeyPath<M, T>,
+  public func assigning<M, V>(
+    _ value: V,
+    to keyPath: WritableKeyPath<M, V>,
     on memeber: WritableKeyPath<Self, M?>
   ) -> Self {
     var this = self
@@ -55,9 +55,9 @@ extension Chaining where Self: Any {
 extension Chaining where Self: AnyObject {
   @inline(__always)
   @discardableResult
-  public func assigning<T>(
-    _ value: T,
-    to keyPath: ReferenceWritableKeyPath<Self, T>
+  public func assigning<V>(
+    _ value: V,
+    to keyPath: ReferenceWritableKeyPath<Self, V>
   ) -> Self {
     self[keyPath: keyPath] = value
     return self
