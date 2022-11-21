@@ -14,7 +14,7 @@ public final class ConcurrentQueue {
     target: DispatchQueue? = nil,
     maxConcurrentCount count: Int = .max
   ) {
-    gatekeeperQueue = .init(label: "Gatekeeper4\(label)")
+    gatekeeperQueue = .init(label: "Gatekeeper4\(label)", qos: qos)
     concurrentQueue = .init(
       label: label, qos: qos, attributes: [.concurrent],
       autoreleaseFrequency: autoreleaseFrequency, target: target

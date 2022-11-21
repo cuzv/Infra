@@ -54,7 +54,7 @@ public final class ConcurrentPriorityQueue {
     target: DispatchQueue? = nil,
     maxConcurrentCount: Int = .max
   ) {
-    gatekeeperQueue = .init(label: "Gatekeeper4\(label)")
+    gatekeeperQueue = .init(label: "Gatekeeper4\(label)", qos: qos)
     concurrentQueue = .init(
       label: label,
       qos: qos,
