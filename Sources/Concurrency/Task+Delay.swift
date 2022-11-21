@@ -5,6 +5,7 @@ extension Task where Failure == Error {
   /// Delaying an asynchronous Swift Task
   ///
   /// Copied from https://www.swiftbysundell.com/articles/delaying-an-async-swift-task/
+  @discardableResult
   public init(
     priority: TaskPriority? = nil,
     delay interval: TimeInterval,
