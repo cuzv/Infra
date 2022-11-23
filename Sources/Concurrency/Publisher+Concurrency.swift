@@ -35,6 +35,17 @@ public extension Publisher {
       }
     }
   }
+
+  func asyncSink(
+    withPriority priority: TaskPriority? = nil,
+    receiveValue: @escaping ((Output) async -> Void)
+  ) -> AnyCancellable where Failure == Never {
+    sink { output in
+      Task(priority: priority) {
+        await receiveValue(output)
+      }
+    }
+  }
 }
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, macCatalyst 14.0, *)
