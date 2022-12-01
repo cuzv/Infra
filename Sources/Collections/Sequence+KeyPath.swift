@@ -24,8 +24,23 @@ public extension Sequence {
   }
 
   @inline(__always)
+  func filter(_ keyPath: KeyPath<Element, Bool>) -> [Element] {
+    filter { $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
   func filter(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
     filter { true == $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool>) -> [Element] {
+    filter { !$0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
+    filter { false == $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -73,6 +88,16 @@ public extension LazySequence {
   @inline(__always)
   func filter(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
     filter { true == $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool>) -> LazyFilterSequence<Base> {
+    filter { !$0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
+    filter { false == $0[keyPath: keyPath] }
   }
 
   @inline(__always)
@@ -125,6 +150,16 @@ public extension LazyMapSequence {
   }
 
   @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool>) -> LazyFilterSequence<Elements> {
+    filter { !$0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
+    filter { false == $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
   func drop(
     _ keyPath: KeyPath<Element, Bool>
   ) -> LazyDropWhileSequence<LazyMapSequence<Base, Element>.Elements> {
@@ -169,6 +204,16 @@ public extension LazyFilterSequence {
   @inline(__always)
   func filter(_ keyPath: KeyPath<Element, Bool?>) -> Self {
     filter { true == $0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool>) -> Self {
+    filter { !$0[keyPath: keyPath] }
+  }
+
+  @inline(__always)
+  func omit(_ keyPath: KeyPath<Element, Bool?>) -> Self {
+    filter { false == $0[keyPath: keyPath] }
   }
 
   @inline(__always)

@@ -29,4 +29,13 @@ public extension Date {
   mutating func add(component: Calendar.Component, value: Int) {
     self = adding(component: component, value: value)
   }
+
+  var timeRemoved: Date {
+    guard let date = Calendar.current.date(
+      from: Calendar.current.dateComponents([.year, .month, .day], from: self)
+    ) else {
+      fatalError("Failed to strip time from Date object")
+    }
+    return date
+  }
 }
