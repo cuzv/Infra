@@ -34,12 +34,12 @@ public extension Sequence {
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool>) -> [Element] {
+  func reject(_ keyPath: KeyPath<Element, Bool>) -> [Element] {
     filter { !$0[keyPath: keyPath] }
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
+  func reject(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
     filter { false == $0[keyPath: keyPath] }
   }
 
@@ -91,12 +91,12 @@ public extension LazySequence {
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool>) -> LazyFilterSequence<Base> {
+  func reject(_ keyPath: KeyPath<Element, Bool>) -> LazyFilterSequence<Base> {
     filter { !$0[keyPath: keyPath] }
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
+  func reject(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
     filter { false == $0[keyPath: keyPath] }
   }
 
@@ -150,12 +150,12 @@ public extension LazyMapSequence {
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool>) -> LazyFilterSequence<Elements> {
+  func reject(_ keyPath: KeyPath<Element, Bool>) -> LazyFilterSequence<Elements> {
     filter { !$0[keyPath: keyPath] }
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
+  func reject(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
     filter { false == $0[keyPath: keyPath] }
   }
 
@@ -207,12 +207,12 @@ public extension LazyFilterSequence {
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool>) -> Self {
+  func reject(_ keyPath: KeyPath<Element, Bool>) -> Self {
     filter { !$0[keyPath: keyPath] }
   }
 
   @inline(__always)
-  func omit(_ keyPath: KeyPath<Element, Bool?>) -> Self {
+  func reject(_ keyPath: KeyPath<Element, Bool?>) -> Self {
     filter { false == $0[keyPath: keyPath] }
   }
 

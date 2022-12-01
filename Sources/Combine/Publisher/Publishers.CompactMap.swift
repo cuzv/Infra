@@ -3,7 +3,7 @@ import Combine
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
 extension Publisher {
-  public func omitNils<Wrapped>()
+  public func rejectNils<Wrapped>()
   -> Publishers.CompactMap<Self, Wrapped>
   where Output == Wrapped? {
     compactMap { $0 ?? nil }
