@@ -11,4 +11,6 @@ public extension DateComponentsFormatter {
     self.unitsStyle = unitsStyle
     self.zeroFormattingBehavior = zeroFormattingBehavior
   }
+
+  static let duration = DateComponentsFormatter(allowedUnits: [.hour, .minute, .second], unitsStyle: .positional, zeroFormattingBehavior: .pad)
 }
