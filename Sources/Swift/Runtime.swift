@@ -7,27 +7,38 @@ func swizzleMethod(
   override overrideSelector: Selector,
   isInstanceMethod: Bool
 ) -> Bool {
-  if
-    let originalMethod = class_getInstanceMethod(clazz, originalSelector),
-    let overrideMethod = class_getInstanceMethod(clazz, overrideSelector)
-  {
-    if isInstanceMethod, class_addMethod(
-      clazz,
-      originalSelector,
-      method_getImplementation(overrideMethod),
-      method_getTypeEncoding(overrideMethod)
-    ) {
-      class_replaceMethod(
+  if isInstanceMethod {
+    if
+      let originalMethod = class_getInstanceMethod(clazz, originalSelector),
+      let overrideMethod = class_getInstanceMethod(clazz, overrideSelector)
+    {
+      if class_addMethod(
         clazz,
-        overrideSelector,
-        method_getImplementation(originalMethod),
-        method_getTypeEncoding(originalMethod)
-      )
-    } else {
-      method_exchangeImplementations(originalMethod, overrideMethod)
+        originalSelector,
+        method_getImplementation(overrideMethod),
+        method_getTypeEncoding(overrideMethod)
+      ) {
+        class_replaceMethod(
+          clazz,
+          overrideSelector,
+          method_getImplementation(originalMethod),
+          method_getTypeEncoding(originalMethod)
+        )
+      } else {
+        method_exchangeImplementations(originalMethod, overrideMethod)
+      }
+      return true
     }
-    return true
+  } else {
+    if
+      let originalMethod = class_getClassMethod(clazz, originalSelector),
+      let overrideMethod = class_getClassMethod(clazz, overrideSelector)
+    {
+      method_exchangeImplementations(originalMethod, overrideMethod)
+      return true
+    }
   }
+
   return false
 }
 
