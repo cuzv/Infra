@@ -5,7 +5,7 @@ extension Sequence {
   }
 
   @inline(__always)
-  public func dropNils<Wrapped>()
+  public func rejectNils<Wrapped>()
   -> [Wrapped] where Element == Wrapped? {
     compactMap { $0 }
   }
