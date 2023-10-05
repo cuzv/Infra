@@ -3,12 +3,12 @@ import Foundation
 import Combine
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Combine where Base: AnyObject & Bindable {
+extension Combine where Base: AnyObject & BindingProvider {
   public typealias Binder<Value> = Subscribers.Binder<Base, Value>
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Combine where Base: AnyObject & Bindable {
+extension Combine where Base: AnyObject & BindingProvider {
   public subscript(_ action: @escaping (Base) -> () -> Void) -> Binder<Void> {
     .init(target: base) { base, _ in
       action(base)()
@@ -53,7 +53,7 @@ extension Combine where Base: AnyObject & Bindable {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Combine where Base: AnyObject & Bindable {
+extension Combine where Base: AnyObject & BindingProvider {
   public subscript(_ action: ((Base) -> Void)?) -> Binder<Void> {
     .init(target: base) { base, _ in
       action?(base)
@@ -98,7 +98,7 @@ extension Combine where Base: AnyObject & Bindable {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Combine where Base: AnyObject & Bindable {
+extension Combine where Base: AnyObject & BindingProvider {
   public subscript<Element>(_ keyPath: ReferenceWritableKeyPath<Base, Element>) -> Binder<Element> {
     .init(target: base) { base, value in
       base[keyPath: keyPath] = value

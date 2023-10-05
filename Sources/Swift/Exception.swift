@@ -1,8 +1,21 @@
+import OSLog
+
+@available(iOS 14.0, *)
+let logger = Logger(subsystem: "com.redrainlab.app.infra", category: "Exception")
+
+private func log(_ error: Error) {
+  if #available(iOS 14.0, *) {
+    logger.debug("\(error)")
+  } else {
+    debugPrint(error)
+  }
+}
+
 public func silent(perform: () throws -> Void) {
   do {
     return try perform()
   } catch {
-    debugPrint(error)
+    log(error)
   }
 }
 
@@ -11,7 +24,7 @@ public func attempt<T>(perform: () throws -> T) rethrows -> T {
   do {
     return try perform()
   } catch {
-    debugPrint(error)
+    log(error)
     throw error
   }
 }
@@ -21,7 +34,7 @@ public func silent(perform: () async throws -> Void) async {
   do {
     return try await perform()
   } catch {
-    debugPrint(error)
+    log(error)
   }
 }
 
@@ -31,7 +44,7 @@ public func attempt<T>(perform: () async throws -> T) async rethrows -> T {
   do {
     return try await perform()
   } catch {
-    debugPrint(error)
+    log(error)
     throw error
   }
 }
@@ -48,7 +61,7 @@ public extension Task {
       do {
         try await operation()
       } catch {
-        debugPrint(error)
+        log(error)
       }
     }
   }
@@ -63,7 +76,7 @@ public extension Task {
       do {
         return try await operation()
       } catch {
-        debugPrint(error)
+        log(error)
         throw error
       }
     }

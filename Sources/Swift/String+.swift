@@ -192,10 +192,11 @@ extension String {
     return comps.joined(separator: "").count == 0 && hasLetters() && hasNumbers()
   }
 
+  @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
   public func isNumeric() -> Bool {
     let scanner = Scanner(string: self)
     scanner.locale = NSLocale.current
-    return scanner.scanDecimal(nil) && scanner.isAtEnd
+    return nil != scanner.scanDecimal() && scanner.isAtEnd
   }
 
   public func isDigits() -> Bool {

@@ -38,4 +38,15 @@ public extension Date {
     }
     return date
   }
+
+  var previousWeekday: Date {
+    var previous = self
+    let calendar = Calendar.current
+
+    repeat {
+      previous.add(component: .day, value: -1)
+    } while calendar.isDateInWeekend(previous)
+
+    return previous
+  }
 }

@@ -7,9 +7,9 @@ extension URL: ExpressibleByStringLiteral {
 }
 
 extension URL {
-  public static let documentDirectory = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
-  public static let cachesDirectory = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
-  public static let inboxDirectory = documentDirectory.appendingPathComponent("Inbox")
+  public static let documentDir = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+  public static let cachesDir = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
+  public static let inboxDir = documentDir.appendingPathComponent("Inbox")
 
   public func resourceValue<T>(forKey key: URLResourceKey) -> T? {
     do {

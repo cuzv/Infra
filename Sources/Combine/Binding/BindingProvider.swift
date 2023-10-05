@@ -3,12 +3,12 @@ import Foundation
 import Combine
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-public protocol Bindable {
+public protocol BindingProvider {
   mutating func store(_ subscription: AnyCancellable)
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Bindable where Self: AnyObject {
+extension BindingProvider where Self: AnyObject {
   public func store(_ subscription: AnyCancellable) {
     subscription.store(in: &subscriptions)
   }
@@ -33,10 +33,10 @@ extension Bindable where Self: AnyObject {
 
 @nonobjc private var subscriptionsKey: Void?
 
-extension NSObject: Bindable {}
+extension NSObject: BindingProvider {}
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension CurrentValueSubject: Bindable {}
+extension CurrentValueSubject: BindingProvider {}
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension PassthroughSubject: Bindable {}
+extension PassthroughSubject: BindingProvider {}
 #endif

@@ -4,7 +4,7 @@ import Combine
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
 extension Subscribers {
-  public final class Binder<Target: Bindable & AnyObject, Input> {
+  public final class Binder<Target: BindingProvider & AnyObject, Input> {
     private(set) weak var target: Target?
     private let receiveCompletion: (Target, Completion<Never>) -> Void
     private let receiveValue: (Target, Input) -> Void
@@ -92,7 +92,7 @@ extension Subscribers.Binder: Cancellable {
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
 extension Publisher where Failure == Never {
   @discardableResult
-  public func bind<Target: Bindable & AnyObject>(
+  public func bind<Target: BindingProvider & AnyObject>(
     to sink: Subscribers.Binder<Target, Output>
   ) -> AnyCancellable {
     guard let target = sink.target else { return AnyCancellable({}) }
@@ -103,7 +103,7 @@ extension Publisher where Failure == Never {
   }
 
   @discardableResult
-  public func bind<Target: Bindable & AnyObject>(
+  public func bind<Target: BindingProvider & AnyObject>(
     to sink: Subscribers.Binder<Target, Output?>
   ) -> AnyCancellable {
     map(Optional.some).bind(to: sink)
@@ -134,7 +134,7 @@ extension Publisher where Failure == Never {
   }
 
   @discardableResult
-  public func bind<Target: Bindable & AnyObject>(
+  public func bind<Target: BindingProvider & AnyObject>(
     to target: Target,
     action: @escaping (Target, Output) -> Void
   ) -> AnyCancellable {

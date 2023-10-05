@@ -1,6 +1,6 @@
 extension Sequence {
   @inline(__always)
-  public func filter<T>(on type: T.Type) -> [Element] {
+  public func filter<T>(_ type: T.Type) -> [Element] {
     filter { $0 is T }
   }
 
@@ -28,7 +28,7 @@ extension Sequence {
 
 extension LazySequence {
   @inline(__always)
-  public func filter<T>(on type: T.Type) -> LazyFilterSequence<Base> {
+  public func filter<T>(_ type: T.Type) -> LazyFilterSequence<Base> {
     filter { $0 is T }
   }
 
@@ -64,7 +64,7 @@ extension LazySequence {
 
 extension LazyMapSequence {
   @inline(__always)
-  public func filter<T>(on type: T.Type) -> LazyFilterSequence<Elements> {
+  public func filter<T>(_ type: T.Type) -> LazyFilterSequence<Elements> {
     filter { $0 is T }
   }
 
@@ -100,7 +100,7 @@ extension LazyMapSequence {
 
 extension LazyFilterSequence {
   @inline(__always)
-  public func filter<T>(on type: T.Type) -> Self {
+  public func filter<T>(_ type: T.Type) -> Self {
     filter { $0 is T }
   }
 

@@ -35,7 +35,7 @@ extension Publishers {
       self.scheduler = scheduler
     }
 
-    public func receive<S: Subscriber>(subscriber: S) where Upstream.Failure == S.Failure, Upstream.Output == S.Input {
+    public func receive<Sub: Subscriber>(subscriber: Sub) where Upstream.Failure == Sub.Failure, Upstream.Output == Sub.Input {
       upstream.catch { e -> AnyPublisher<Output, Failure> in
         guard retries < max else { return Fail(error: e).eraseToAnyPublisher() }
         return Fail(error: e)

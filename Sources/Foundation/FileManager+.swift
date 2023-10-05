@@ -1,5 +1,12 @@
 import Foundation
 
+public extension FileManager {
+  @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+  var iCloudDocumentsDirectory: URL? {
+    url(forUbiquityContainerIdentifier: nil)?.appending(component: "Documents")
+  }
+}
+
 extension FileManager {
   public enum ListFileType {
     case visible

@@ -24,6 +24,13 @@ extension Sequence {
   ) -> [Element] where S.Element == Element, Element: Equatable {
     filter { !valuesToReject.contains($0) }
   }
+
+  @inline(__always)
+  public func reject<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) != value }
+  }
 }
 
 extension LazySequence {
@@ -62,6 +69,21 @@ extension LazySequence {
   where S.Element == Element, Element: Equatable {
     filter { !valuesToReject.contains($0) }
   }
+
+  @inline(__always)
+  public func reject<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> LazyFilterSequence<Elements> where Value: Equatable {
+    filter { transform($0) != value }
+  }
+
+  @inline(__always)
+  public func reject<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) != value }
+  }
+
 }
 
 extension LazyMapSequence {
@@ -100,6 +122,20 @@ extension LazyMapSequence {
   where S.Element == Element, Element: Equatable {
     filter { !valuesToReject.contains($0) }
   }
+
+  @inline(__always)
+  public func reject<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> LazyFilterSequence<Elements> where Value: Equatable {
+    filter { transform($0) != value }
+  }
+
+  @inline(__always)
+  public func reject<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) != value }
+  }
 }
 
 extension LazyFilterSequence {
@@ -137,5 +173,19 @@ extension LazyFilterSequence {
   ) -> Self
   where S.Element == Element, Element: Equatable {
     filter { !valuesToReject.contains($0) }
+  }
+
+  @inline(__always)
+  public func reject<Value>(
+    on transform: @escaping (Element) -> Value, equals value: Value
+  ) -> Self where Value: Equatable {
+    filter { transform($0) != value }
+  }
+
+  @inline(__always)
+  public func reject<Value>(
+    on transform: (Element) throws -> Value, equals value: Value
+  ) rethrows -> [Element] where Value: Equatable {
+    try filter { try transform($0) != value }
   }
 }
