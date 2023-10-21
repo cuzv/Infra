@@ -309,3 +309,20 @@ extension String {
     return String(result)
   }
 }
+
+// MARK: - Python Style Subscript
+
+public extension String {
+  subscript(offset: Int) -> Character {
+    get {
+      let pivot = offset >= 0 ? startIndex : endIndex
+      let idx = index(pivot, offsetBy: offset)
+      return self[idx]
+    }
+    set {
+      let pivot = offset >= 0 ? startIndex : endIndex
+      let idx = index(pivot, offsetBy: offset)
+      replaceSubrange(idx...idx, with: [newValue])
+    }
+  }
+}
