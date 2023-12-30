@@ -47,7 +47,7 @@ extension DispatchQueue {
   }
 
   public func safeAsync(execute block: @escaping () -> Void) {
-    if self == .main && Thread.isMainThread {
+    if DispatchQueue.is(self) {
       block()
     } else {
       async(execute: block)
