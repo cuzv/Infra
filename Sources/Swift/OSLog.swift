@@ -52,24 +52,14 @@ public struct Log {
       message = "#\(label)・" + message
     }
 
-    #if DEBUG
     let result = String(
-      format: "%@・%@:%i・%@",
+      format: "%@・%@:%i:%@・%@",
       level.stringValue,
       NSString(string: file).lastPathComponent,
       line,
-      message
-    )
-    #else
-    let result = String(
-      format: "%@・%@:%@:%i・%@",
-      level.stringValue,
-      NSString(string: file).lastPathComponent,
       function,
-      line,
       message
     )
-    #endif
 
     os_log("%{public}@", log: provider.log, type: level.osLogType, result)
   }
