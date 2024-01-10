@@ -1,3 +1,6 @@
+import Foundation
+import Dispatch
+
 @propertyWrapper
 public class SafeMutable<Value> {
   private var value: Value
