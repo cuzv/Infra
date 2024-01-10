@@ -131,3 +131,9 @@ extension UIEdgeInsets: Chaining {}
 extension UIOffset: Chaining {}
 extension UIRectEdge: Chaining {}
 #endif
+
+#if canImport(UIKit)
+import UIKit
+@available(iOS 15.0, *)
+extension UIButton.Configuration: Chaining {}
+#endif
