@@ -1,10 +1,10 @@
 import OSLog
 
-@available(iOS 14.0, *)
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, macCatalyst 14.0, *)
 let logger = Logger(subsystem: "com.redrainlab.app.infra", category: "Exception")
 
 private func log(_ error: Error) {
-  if #available(iOS 14.0, *) {
+  if #available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, macCatalyst 14.0, *) {
     logger.debug("\(error)")
   } else {
     debugPrint(error)
