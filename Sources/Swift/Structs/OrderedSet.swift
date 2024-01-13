@@ -14,7 +14,7 @@ public struct OrderedSet<T: Hashable> {
     }
 
     func index(after i: Int) -> Int {
-      return pointers.index(after: i)
+      pointers.index(after: i)
     }
 
     func insert(_ element: UnsafeMutablePointer<T>, at i: Int) {
@@ -22,12 +22,12 @@ public struct OrderedSet<T: Hashable> {
     }
 
     var last: UnsafeMutablePointer<T>? {
-      return pointers.last
+      pointers.last
     }
 
     @discardableResult
     func remove(at i: Int) -> UnsafeMutablePointer<T> {
-      return pointers.remove(at: i)
+      pointers.remove(at: i)
     }
 
     func removeAll() {
@@ -35,7 +35,7 @@ public struct OrderedSet<T: Hashable> {
     }
 
     subscript(_ i: Int) -> UnsafeMutablePointer<T> {
-      get { return pointers[i] }
+      get { pointers[i] }
       set { pointers[i] = newValue }
     }
 
@@ -56,7 +56,7 @@ public struct OrderedSet<T: Hashable> {
    Inititalizes an empty ordered set.
    - returns:     An empty ordered set.
    */
-  public init() { }
+  public init() {}
 
   /**
    Initializes a new ordered set with the order and contents
@@ -107,7 +107,6 @@ public struct OrderedSet<T: Hashable> {
    - parameter    object: The object to be appended.
    */
   public mutating func append(_ object: T) {
-
     if let lastIndex = index(of: object) {
       remove(object)
       insert(object, at: lastIndex)
@@ -174,7 +173,6 @@ public struct OrderedSet<T: Hashable> {
    */
   @discardableResult
   public mutating func remove<S: Sequence>(_ objects: S) -> [Index]? where S.Iterator.Element == T {
-
     var indexes = [Index]()
     objects.forEach { object in
       if let index = index(of: object) {
@@ -348,8 +346,8 @@ public struct OrderedSet<T: Hashable> {
     // Append our object, then swap them until its at the end.
     append(object)
 
-    for i in (index..<count-1).reversed() {
-      swapObject(self[i], with: self[i+1])
+    for i in (index ..< count - 1).reversed() {
+      swapObject(self[i], with: self[i + 1])
     }
   }
 
@@ -384,53 +382,52 @@ public struct OrderedSet<T: Hashable> {
 
     // Now we'll remove duplicates and update the shifted objects position in the contents
     // dictionary.
-    for i in index + addedObjectCount..<count {
+    for i in index + addedObjectCount ..< count {
       contents[sequencedContents[i].pointee] = i
     }
   }
 
   /// Returns the last object in the set, or `nil` if the set is empty.
   public var last: T? {
-    return sequencedContents.last?.pointee
+    sequencedContents.last?.pointee
   }
 }
 
-extension OrderedSet: ExpressibleByArrayLiteral { }
+extension OrderedSet: ExpressibleByArrayLiteral {}
 
 extension OrderedSet where T: Comparable {}
 
-extension OrderedSet {
-
-  public var count: Int {
-    return contents.count
+public extension OrderedSet {
+  var count: Int {
+    contents.count
   }
 
-  public var isEmpty: Bool {
-    return count == 0
+  var isEmpty: Bool {
+    count == 0
   }
 
-  public var first: T? {
+  var first: T? {
     guard count > 0 else { return nil }
     return sequencedContents[0].pointee
   }
 
-  public func index(after index: Int) -> Int {
-    return sequencedContents.index(after: index)
+  func index(after index: Int) -> Int {
+    sequencedContents.index(after: index)
   }
 
-  public typealias Index = Int
+  typealias Index = Int
 
-  public var startIndex: Int {
-    return 0
+  var startIndex: Int {
+    0
   }
 
-  public var endIndex: Int {
-    return contents.count
+  var endIndex: Int {
+    contents.count
   }
 
-  public subscript(index: Index) -> T {
+  subscript(index: Index) -> T {
     get {
-      return sequencedContents[index].pointee
+      sequencedContents[index].pointee
     }
 
     set {
@@ -451,34 +448,33 @@ extension OrderedSet {
       }
     }
   }
-
 }
 
-public func +<T, S: Sequence> (lhs: OrderedSet<T>, rhs: S) -> OrderedSet<T> where S.Element == T {
+public func + <T>(lhs: OrderedSet<T>, rhs: some Sequence<T>) -> OrderedSet<T> {
   var joinedSet = lhs
   joinedSet.append(contentsOf: rhs)
 
   return joinedSet
 }
 
-public func +=<T, S: Sequence> (lhs: inout OrderedSet<T>, rhs: S) where S.Element == T {
+public func += <T>(lhs: inout OrderedSet<T>, rhs: some Sequence<T>) {
   lhs.append(contentsOf: rhs)
 }
 
-public func -<T, S: Sequence> (lhs: OrderedSet<T>, rhs: S) -> OrderedSet<T> where S.Element == T {
+public func - <T>(lhs: OrderedSet<T>, rhs: some Sequence<T>) -> OrderedSet<T> {
   var purgedSet = lhs
   purgedSet.remove(rhs)
 
   return purgedSet
 }
 
-public func -=<T, S: Sequence> (lhs: inout OrderedSet<T>, rhs: S) where S.Element == T {
+public func -= <T>(lhs: inout OrderedSet<T>, rhs: some Sequence<T>) {
   lhs.remove(rhs)
 }
 
-extension OrderedSet: Equatable { }
+extension OrderedSet: Equatable {}
 
-public func ==<T> (lhs: OrderedSet<T>, rhs: OrderedSet<T>) -> Bool {
+public func == <T>(lhs: OrderedSet<T>, rhs: OrderedSet<T>) -> Bool {
   if lhs.count != rhs.count {
     return false
   }
@@ -492,7 +488,7 @@ public func ==<T> (lhs: OrderedSet<T>, rhs: OrderedSet<T>) -> Bool {
 
 extension OrderedSet: CustomStringConvertible {
   public var description: String {
-    let children = map({ "\($0)" }).joined(separator: ", ")
+    let children = map { "\($0)" }.joined(separator: ", ")
     return "OrderedSet (\(count) object(s)): [\(children)]"
   }
 }
@@ -501,38 +497,38 @@ extension OrderedSet: RandomAccessCollection {}
 
 // MARK: - Shaw's Extensions
 
-extension OrderedSet {
-  public var set: Set<T> {
-    return .init(contents.keys)
+public extension OrderedSet {
+  var set: Set<T> {
+    .init(contents.keys)
   }
 
-  public var array: [T] {
-    return sequencedContents.pointers.map({ $0.pointee })
+  var array: [T] {
+    sequencedContents.pointers.map(\.pointee)
   }
 
   /// Returns a new set with the elements that are common to both this set and the given set.
-  public func intersection<S: Sequence>(_ other: S) -> Set<T> where S.Iterator.Element == T {
-    return set.intersection(other)
+  func intersection<S: Sequence>(_ other: S) -> Set<T> where S.Iterator.Element == T {
+    set.intersection(other)
   }
 
   /// Returns a new set containing the elements of this set that do not occur in the given set.
-  public func subtracting<S: Sequence>(_ other: S) -> Set<T> where S.Iterator.Element == T {
-    return set.subtracting(other)
+  func subtracting<S: Sequence>(_ other: S) -> Set<T> where S.Iterator.Element == T {
+    set.subtracting(other)
   }
 
   /// Returns a new ordered set with the elements that are common to both this set and the given set. (keep order in this set)
-  public func orderedIntersection<S: Sequence>(_ other: S) -> OrderedSet<T> where S.Iterator.Element == T {
-    let otherIndices = Set(other.compactMap({ index(of: $0) }))
-    let orderedIndices = sequencedContents.pointers.compactMap({ index(of: $0.pointee) }).filter({ otherIndices.contains($0) })
-    let result = orderedIndices.map({ sequencedContents[$0].pointee })
+  func orderedIntersection<S: Sequence>(_ other: S) -> OrderedSet<T> where S.Iterator.Element == T {
+    let otherIndices = Set(other.compactMap { index(of: $0) })
+    let orderedIndices = sequencedContents.pointers.compactMap { index(of: $0.pointee) }.filter { otherIndices.contains($0) }
+    let result = orderedIndices.map { sequencedContents[$0].pointee }
     return .init(sequence: result)
   }
 
   /// Returns a new ordered set containing the elements of this set that do not occur in the given set. (keep order in this set)
-  public func orderedSubtracting<S: Sequence>(_ other: S) -> OrderedSet<T> where S.Iterator.Element == T {
-    let otherIndices = Set(other.compactMap({ index(of: $0) }))
-    let orderedIndices = sequencedContents.pointers.compactMap({ index(of: $0.pointee) }).filter({ !otherIndices.contains($0) })
-    let result = orderedIndices.map({ sequencedContents[$0].pointee })
+  func orderedSubtracting<S: Sequence>(_ other: S) -> OrderedSet<T> where S.Iterator.Element == T {
+    let otherIndices = Set(other.compactMap { index(of: $0) })
+    let orderedIndices = sequencedContents.pointers.compactMap { index(of: $0.pointee) }.filter { !otherIndices.contains($0) }
+    let result = orderedIndices.map { sequencedContents[$0].pointee }
     return .init(sequence: result)
   }
 }

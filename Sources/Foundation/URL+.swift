@@ -6,12 +6,12 @@ extension URL: ExpressibleByStringLiteral {
   }
 }
 
-extension URL {
-  public static let documentDir = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
-  public static let cachesDir = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
-  public static let inboxDir = documentDir.appendingPathComponent("Inbox")
+public extension URL {
+  static let documentDir = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+  static let cachesDir = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
+  static let inboxDir = documentDir.appendingPathComponent("Inbox")
 
-  public func resourceValue<T>(forKey key: URLResourceKey) -> T? {
+  func resourceValue<T>(forKey key: URLResourceKey) -> T? {
     do {
       let meta = try resourceValues(forKeys: Set([key]))
       return meta.allValues[key] as? T
@@ -20,7 +20,7 @@ extension URL {
     }
   }
 
-  public var queryItems: [URLQueryItem] {
+  var queryItems: [URLQueryItem] {
     get { URLComponents(url: self, resolvingAgainstBaseURL: true)?.queryItems ?? [] }
     mutating set {
       if var components = URLComponents(url: self, resolvingAgainstBaseURL: true) {
@@ -32,7 +32,7 @@ extension URL {
     }
   }
 
-  public func appendingQueryItems(_ items: [URLQueryItem]) -> URL {
+  func appendingQueryItems(_ items: [URLQueryItem]) -> URL {
     if var components = URLComponents(url: self, resolvingAgainstBaseURL: true) {
       var queryItems = components.queryItems ?? []
       queryItems.append(contentsOf: items)
@@ -43,11 +43,11 @@ extension URL {
     }
   }
 
-  public mutating func appendQueryItems(_ items: [URLQueryItem]) {
+  mutating func appendQueryItems(_ items: [URLQueryItem]) {
     self = appendingQueryItems(items)
   }
 
-  public func deletingQueryItems() -> URL {
+  func deletingQueryItems() -> URL {
     if var components = URLComponents(url: self, resolvingAgainstBaseURL: true) {
       components.queryItems = nil
       return components.url ?? self
@@ -56,11 +56,11 @@ extension URL {
     }
   }
 
-  public mutating func deleteQueryItems() {
+  mutating func deleteQueryItems() {
     self = deletingQueryItems()
   }
 
-  public func queryValue(for key: String) -> [String] {
+  func queryValue(for key: String) -> [String] {
     URLComponents(url: self, resolvingAgainstBaseURL: true)?
       .queryItems?
       .filter {
@@ -71,11 +71,11 @@ extension URL {
       []
   }
 
-  public func identicalTo(_ other: URL) -> Bool {
+  func identicalTo(_ other: URL) -> Bool {
     resolvingSymlinksInPath() == other.resolvingSymlinksInPath()
   }
 
-  public func contains(_ other: URL) -> Bool {
+  func contains(_ other: URL) -> Bool {
     resolvingSymlinksInPath()
       .absoluteString
       .range(
@@ -85,8 +85,8 @@ extension URL {
   }
 }
 
-extension URL {
-  public init?(itmsAppId: String, writeReview: Bool = false) {
+public extension URL {
+  init?(itmsAppId: String, writeReview: Bool = false) {
     var link = "itms-apps://itunes.apple.com/app/id\(itmsAppId)?mt=8"
     if writeReview {
       link.append("&action=write-review")

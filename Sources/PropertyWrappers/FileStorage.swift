@@ -9,7 +9,7 @@ public struct FileStorage<Value: Codable> {
   public init(directory: FileManager.SearchPathDirectory, fileName: String) {
     self.directory = directory
     self.fileName = fileName
-    self.value = try? FileUtils.loadJSON(from: directory, fileName: fileName)
+    value = try? FileUtils.loadJSON(from: directory, fileName: fileName)
   }
 
   public var wrappedValue: Value? {
@@ -17,8 +17,8 @@ public struct FileStorage<Value: Codable> {
     set {
       value = newValue
 
-      let directory = self.directory
-      let fileName = self.fileName
+      let directory = directory
+      let fileName = fileName
 
       DispatchQueue.fileStorage.async {
         if let value = newValue {
@@ -31,6 +31,6 @@ public struct FileStorage<Value: Codable> {
   }
 }
 
-fileprivate extension DispatchQueue {
+private extension DispatchQueue {
   static let fileStorage = DispatchQueue(label: "com.redrainlab.FileStorage")
 }

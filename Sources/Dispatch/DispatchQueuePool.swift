@@ -16,11 +16,11 @@ struct DispatchContext {
 extension DispatchContext {
   init(name: String, queueCount: Int, qos: DispatchQoS) {
     self.name = name
-    self.queues = (0..<queueCount) .map {
+    queues = (0 ..< queueCount).map {
       DispatchQueue(label: name + "\($0)", qos: qos)
     }
     self.queueCount = queueCount
-    self.counter = 0
+    counter = 0
   }
 
   private static var appropriateQueueCount: Int {
@@ -32,23 +32,28 @@ extension DispatchContext {
   fileprivate static let userInteractive: DispatchContext = .init(
     name: "com.redrainlab.queue.qos.userInteractive",
     queueCount: appropriateQueueCount,
-    qos: .userInteractive)
+    qos: .userInteractive
+  )
   fileprivate static let userInitiated: DispatchContext = .init(
     name: "com.redrainlab.queue.qos.userInitiated",
     queueCount: appropriateQueueCount,
-    qos: .userInitiated)
+    qos: .userInitiated
+  )
   fileprivate static let utility: DispatchContext = .init(
     name: "com.redrainlab.queue.qos.utility",
     queueCount: appropriateQueueCount,
-    qos: .utility)
+    qos: .utility
+  )
   fileprivate static let background: DispatchContext = .init(
     name: "com.redrainlab.queue.qos.background",
     queueCount: appropriateQueueCount,
-    qos: .background)
+    qos: .background
+  )
   fileprivate static let `default`: DispatchContext = .init(
     name: "com.redrainlab.queue.qos.default",
     queueCount: appropriateQueueCount,
-    qos: .default)
+    qos: .default
+  )
 }
 
 final class DispatchQueuePool {
@@ -57,6 +62,7 @@ final class DispatchQueuePool {
     lock.name = "DispatchQueuePool"
     return lock
   }()
+
   private var context: DispatchContext
 
   init(context: DispatchContext) {
@@ -67,7 +73,7 @@ final class DispatchQueuePool {
     let count = queueCount < 1 ? 1 : (
       queueCount > kMaxQueueCount ? kMaxQueueCount : queueCount
     )
-    self.context = .init(name: name, queueCount: count, qos: qos)
+    context = .init(name: name, queueCount: count, qos: qos)
   }
 
   static let userInteractive: DispatchQueuePool = .init(context: .userInteractive)
@@ -88,21 +94,19 @@ final class DispatchQueuePool {
   }
 }
 
-extension DispatchQueue {
-  public static func serial(qos: DispatchQoS = .unspecified) -> DispatchQueue {
-    let pool: DispatchQueuePool
-
-    switch qos {
+public extension DispatchQueue {
+  static func serial(qos: DispatchQoS = .unspecified) -> DispatchQueue {
+    let pool: DispatchQueuePool = switch qos {
     case .userInteractive:
-      pool = .userInteractive
+      .userInteractive
     case .userInitiated:
-      pool = .userInitiated
+      .userInitiated
     case .utility:
-      pool = .utility
+      .utility
     case .background:
-      pool = .background
+      .background
     default:
-      pool = .default
+      .default
     }
 
     return pool.queue

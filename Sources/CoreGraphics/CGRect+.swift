@@ -1,7 +1,7 @@
 import CoreGraphics
 
-extension CGRect {
-  public init(center: CGPoint, size: CGSize) {
+public extension CGRect {
+  init(center: CGPoint, size: CGSize) {
     let translation = size.applying(.init(scaleX: -0.5, y: -0.5))
     let origin = center.applying(
       .init(translationX: translation.width, y: translation.height)
@@ -10,12 +10,12 @@ extension CGRect {
   }
 
   @inline(__always)
-  public var center: CGPoint {
+  var center: CGPoint {
     .init(x: midX, y: midY)
   }
 
   @inline(__always)
-  public var ceiled: CGRect {
+  var ceiled: CGRect {
     .init(
       x: ceil(origin.x), y: ceil(origin.y),
       width: ceil(width), height: ceil(height)
@@ -23,14 +23,14 @@ extension CGRect {
   }
 
   @inline(__always)
-  public var floored: CGRect {
+  var floored: CGRect {
     .init(
       x: floor(origin.x), y: floor(origin.y),
       width: floor(width), height: floor(height)
     )
   }
 
-  public func scaled(aspectFit boundingRect: CGRect) -> CGRect {
+  func scaled(aspectFit boundingRect: CGRect) -> CGRect {
     precondition(width != 0)
     precondition(height != 0)
 
@@ -39,7 +39,7 @@ extension CGRect {
     return .init(center: boundingRect.center, size: targetSize)
   }
 
-  public func scaled(aspectFill boundingRect: CGRect) -> CGRect {
+  func scaled(aspectFill boundingRect: CGRect) -> CGRect {
     precondition(width != 0)
     precondition(height != 0)
 
@@ -48,7 +48,7 @@ extension CGRect {
     return .init(center: boundingRect.center, size: targetSize)
   }
 
-  public func center(within boundingRect: CGRect) -> CGRect {
+  func center(within boundingRect: CGRect) -> CGRect {
     offsetBy(dx: boundingRect.midX - midX, dy: boundingRect.midY - midY)
   }
 }

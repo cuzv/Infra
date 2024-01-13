@@ -2,62 +2,66 @@
 import Combine
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher {
-  public func eraseType() -> Publishers.Map<Self, Void> {
+public extension Publisher {
+  func eraseType() -> Publishers.Map<Self, Void> {
     map { _ in () }
   }
 
-  public func with<Inserted>(
+  func with<Inserted>(
     _ inserted: Inserted
   ) -> Publishers.Map<Self, (Output, Inserted)> {
     map { ($0, inserted) }
   }
 
-  public func withDeferred<Inserted>(
+  func withDeferred<Inserted>(
     _ inserted: @escaping @autoclosure () -> Inserted
   ) -> Publishers.Map<Self, (Output, Inserted)> {
     map { ($0, inserted()) }
   }
 
-  public func succeeding<Successor>(
+  func succeeding<Successor>(
     _ successor: Successor
   ) -> Publishers.Map<Self, Successor> {
     map { _ in successor }
   }
 
-  public func succeedingDeferred<Successor>(
+  func succeedingDeferred<Successor>(
     _ successor: @escaping @autoclosure () -> Successor
   ) -> Publishers.Map<Self, Successor> {
     map { _ in successor() }
   }
 
-  public func reverse<A, B>() -> Publishers.Map<Self, (B, A)>
-  where Output == (A, B) {
+  func reverse<A, B>() -> Publishers.Map<Self, (B, A)>
+    where Output == (A, B)
+  {
     map { ($0.1, $0.0) }
   }
 
-  public func reverse<A, B, C>() -> Publishers.Map<Self, (C, B, A)>
-  where Output == (A, B, C) {
+  func reverse<A, B, C>() -> Publishers.Map<Self, (C, B, A)>
+    where Output == (A, B, C)
+  {
     map { ($0.2, $0.1, $0.0) }
   }
 
-  public func squeeze<A, B, C>() -> Publishers.Map<Self, (A, B, C)>
-  where Output == ((A, B), C) {
+  func squeeze<A, B, C>() -> Publishers.Map<Self, (A, B, C)>
+    where Output == ((A, B), C)
+  {
     map { ($0.0, $0.1, $1) }
   }
 
-  public func squeeze<A, B, C>() -> Publishers.Map<Self, (A, B, C)>
-  where Output == (A, (B, C)) {
+  func squeeze<A, B, C>() -> Publishers.Map<Self, (A, B, C)>
+    where Output == (A, (B, C))
+  {
     map { ($0, $1.0, $1.1) }
   }
 
-  public func `as`<Transformed>(
+  func `as`<Transformed>(
     _ transformedType: Transformed.Type
   ) -> Publishers.Map<Self, Transformed?> {
     map { $0 as? Transformed }
   }
 
-  public func map<A, B>(
+  func map<A, B>(
     _ transformA: @escaping (Output) -> A,
     _ transformB: @escaping (Output) -> B
   ) -> Publishers.Map<Self, (A, B)> {
@@ -66,7 +70,7 @@ extension Publisher {
     }
   }
 
-  public func map<A, B, C>(
+  func map<A, B, C>(
     _ transformA: @escaping (Output) -> A,
     _ transformB: @escaping (Output) -> B,
     _ transformC: @escaping (Output) -> C
@@ -76,7 +80,7 @@ extension Publisher {
     }
   }
 
-  public func mutate(
+  func mutate(
     _ mutation: @escaping (inout Output) -> Void
   ) -> Publishers.Map<Self, Output> {
     map { output in
@@ -86,7 +90,7 @@ extension Publisher {
     }
   }
 
-  public func result<T>(
+  func result<T>(
     _ transform: @escaping (Output) throws -> T
   ) -> Publishers.Map<Self, Result<T, AnyError>> {
     map { output in
@@ -98,8 +102,8 @@ extension Publisher {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher where Output: Sequence {
-  public func sorted(
+public extension Publisher where Output: Sequence {
+  func sorted(
     by areInIncreasingOrder: @escaping (Output.Element, Output.Element) -> Bool
   ) -> Publishers.Map<Self, [Output.Element]> {
     map {
@@ -107,19 +111,19 @@ extension Publisher where Output: Sequence {
     }
   }
 
-  public func sorted<T>(
-    by transform: @escaping (Output.Element) throws -> T
-  ) rethrows -> Publishers.TryMap<Self, [Output.Element]> where T: Comparable {
+  func sorted(
+    by transform: @escaping (Output.Element) throws -> some Comparable
+  ) rethrows -> Publishers.TryMap<Self, [Output.Element]> {
     tryMap {
       try $0.lazy.sorted { lhs, rhs in
-        (try transform(lhs)) < (try transform(rhs))
+        try (transform(lhs)) < transform(rhs)
       }
     }
   }
 
-  public func sorted<T>(
-    by transform: @escaping (Output.Element) -> T
-  ) -> Publishers.Map<Self, [Output.Element]> where T: Comparable {
+  func sorted(
+    by transform: @escaping (Output.Element) -> some Comparable
+  ) -> Publishers.Map<Self, [Output.Element]> {
     map {
       $0.lazy.sorted { lhs, rhs in
         transform(lhs) < transform(rhs)
@@ -127,7 +131,7 @@ extension Publisher where Output: Sequence {
     }
   }
 
-  public func reversed() -> Publishers.Map<Self, [Output.Element]> {
+  func reversed() -> Publishers.Map<Self, [Output.Element]> {
     map {
       $0.lazy.reversed()
     }

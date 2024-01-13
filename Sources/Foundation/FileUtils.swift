@@ -5,11 +5,11 @@ public enum FileUtils {
     case fileNotExist
   }
 
-  private static let decoder: JSONDecoder = JSONDecoder()
-  private static let encoder: JSONEncoder = JSONEncoder()
+  private static let decoder: JSONDecoder = .init()
+  private static let encoder: JSONEncoder = .init()
 
-  public static func writeJSON<T: Encodable>(
-    _ value: T,
+  public static func writeJSON(
+    _ value: some Encodable,
     to directory: FileManager.SearchPathDirectory,
     fileName: String
   ) throws {
@@ -19,7 +19,7 @@ public enum FileUtils {
     try writeJSON(value, to: url.appendingPathComponent(fileName))
   }
 
-  public static func writeJSON<T: Encodable>(_ value: T, to url: URL) throws {
+  public static func writeJSON(_ value: some Encodable, to url: URL) throws {
     let data = try encoder.encode(value)
     try data.write(to: url)
   }

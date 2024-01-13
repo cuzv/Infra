@@ -1,28 +1,28 @@
-extension MutableCollection where Self: RandomAccessCollection {
-  public mutating func sort<T>(
-    by transform: (Element) throws -> T
-  ) rethrows where T: Comparable {
+public extension MutableCollection where Self: RandomAccessCollection {
+  mutating func sort(
+    by transform: (Element) throws -> some Comparable
+  ) rethrows {
     try sort { lhs, rhs in
-      (try transform(lhs)) < (try transform(rhs))
+      try (transform(lhs)) < transform(rhs)
     }
   }
 
-  public mutating func sort<T>(
-    by transform: (Element) throws -> T?
-  ) rethrows where T: Comparable {
+  mutating func sort(
+    by transform: (Element) throws -> (some Comparable)?
+  ) rethrows {
     try sort { lhs, rhs in
-      if let lv = (try transform(lhs)), let rv = (try transform(rhs)) {
-        return lv < rv
+      if let lv = try (transform(lhs)), let rv = try (transform(rhs)) {
+        lv < rv
       } else {
-        return true
+        true
       }
     }
   }
 
-  public mutating func sort<M, S>(
-    by majorTransform: (Element) throws -> M,
-    or secondaryTransform: (Element) throws -> S
-  ) rethrows where M: Comparable, S: Comparable {
+  mutating func sort(
+    by majorTransform: (Element) throws -> some Comparable,
+    or secondaryTransform: (Element) throws -> some Comparable
+  ) rethrows {
     try sort { lhs, rhs in
       let lm = try majorTransform(lhs)
       let rm = try majorTransform(rhs)

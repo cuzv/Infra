@@ -1,10 +1,10 @@
 @propertyWrapper
 public struct DebugOverridable<Value> {
-  #if DEBUG
+#if DEBUG
   public var wrappedValue: Value
-  #else
+#else
   public let wrappedValue: Value
-  #endif
+#endif
 
   public init(wrappedValue: Value) {
     self.wrappedValue = wrappedValue

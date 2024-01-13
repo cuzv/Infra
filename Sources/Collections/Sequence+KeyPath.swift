@@ -30,7 +30,7 @@ public extension Sequence {
 
   @inline(__always)
   func filter(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
-    filter { true == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == true }
   }
 
   @inline(__always)
@@ -40,7 +40,7 @@ public extension Sequence {
 
   @inline(__always)
   func reject(_ keyPath: KeyPath<Element, Bool?>) -> [Element] {
-    filter { false == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == false }
   }
 
   @inline(__always)
@@ -87,7 +87,7 @@ public extension LazySequence {
 
   @inline(__always)
   func filter(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
-    filter { true == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == true }
   }
 
   @inline(__always)
@@ -97,7 +97,7 @@ public extension LazySequence {
 
   @inline(__always)
   func reject(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
-    filter { false == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == false }
   }
 
   @inline(__always)
@@ -146,7 +146,7 @@ public extension LazyMapSequence {
 
   @inline(__always)
   func filter(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
-    filter { true == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == true }
   }
 
   @inline(__always)
@@ -156,7 +156,7 @@ public extension LazyMapSequence {
 
   @inline(__always)
   func reject(_ keyPath: KeyPath<Element, Bool?>) -> LazyFilterSequence<Elements> {
-    filter { false == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == false }
   }
 
   @inline(__always)
@@ -203,7 +203,7 @@ public extension LazyFilterSequence {
 
   @inline(__always)
   func filter(_ keyPath: KeyPath<Element, Bool?>) -> Self {
-    filter { true == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == true }
   }
 
   @inline(__always)
@@ -213,7 +213,7 @@ public extension LazyFilterSequence {
 
   @inline(__always)
   func reject(_ keyPath: KeyPath<Element, Bool?>) -> Self {
-    filter { false == $0[keyPath: keyPath] }
+    filter { $0[keyPath: keyPath] == false }
   }
 
   @inline(__always)

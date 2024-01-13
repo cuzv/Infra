@@ -1,12 +1,12 @@
-extension Dictionary {
+public extension Dictionary {
   @inline(__always)
-  public static func += (lhs: inout Dictionary, rhs: Dictionary) {
+  static func += (lhs: inout Dictionary, rhs: Dictionary) {
     lhs.merge(rhs, uniquingKeysWith: { $1 })
   }
 
   @inline(__always)
-  public static func += (lhs: inout Dictionary?, rhs: Dictionary) {
-    if nil == lhs {
+  static func += (lhs: inout Dictionary?, rhs: Dictionary) {
+    if lhs == nil {
       lhs = rhs
     } else {
       lhs?.merge(rhs, uniquingKeysWith: { $1 })
@@ -14,23 +14,23 @@ extension Dictionary {
   }
 
   @inline(__always)
-  public static func += (lhs: Dictionary, rhs: Dictionary) -> Dictionary {
+  static func += (lhs: Dictionary, rhs: Dictionary) -> Dictionary {
     lhs.merging(rhs, uniquingKeysWith: { $1 })
   }
 
   @inline(__always)
-  public static func += (lhs: Dictionary?, rhs: Dictionary) -> Dictionary? {
+  static func += (lhs: Dictionary?, rhs: Dictionary) -> Dictionary? {
     lhs ?? [:].merging(rhs, uniquingKeysWith: { $1 })
   }
 
   @inline(__always)
-  public func has(key: Key) -> Bool {
-    nil != index(forKey: key)
+  func has(key: Key) -> Bool {
+    index(forKey: key) != nil
   }
 }
 
-extension Dictionary {
-  public subscript(
+public extension Dictionary {
+  subscript(
     key: Key,
     setIfNil defaultValue: @autoclosure () -> Value
   ) -> Value {

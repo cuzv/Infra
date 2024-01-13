@@ -137,7 +137,7 @@ public extension Sequence {
         }
       }
 
-      var result = Array<T?>(repeating: nil, count: c)
+      var result = [T?](repeating: nil, count: c)
       while let next = await group.next() {
         result[next.offset] = next.value
       }
@@ -171,11 +171,11 @@ public extension Sequence {
         let idx = c
         c += 1
         group.addTask(priority: priority) {
-          return try await (idx, transform(element))
+          try await (idx, transform(element))
         }
       }
 
-      var result = Array<T?>(repeating: nil, count: c)
+      var result = [T?](repeating: nil, count: c)
       while let next = try await group.next() {
         result[next.offset] = next.value
       }
@@ -247,7 +247,7 @@ public extension Sequence {
         }
       }
 
-      var result = Array<T??>(repeating: nil, count: c)
+      var result = [T??](repeating: nil, count: c)
       while let next = await group.next() {
         result[next.offset] = next.value
       }
@@ -287,7 +287,7 @@ public extension Sequence {
         }
       }
 
-      var result = Array<T??>(repeating: nil, count: c)
+      var result = [T??](repeating: nil, count: c)
       while let next = try await group.next() {
         result[next.offset] = next.value
       }
@@ -357,7 +357,7 @@ public extension Sequence {
         }
       }
 
-      var result = Array<T?>(repeating: nil, count: c)
+      var result = [T?](repeating: nil, count: c)
       while let next = await group.next() {
         result[next.offset] = next.value
       }
@@ -388,17 +388,17 @@ public extension Sequence {
     withPriority priority: TaskPriority? = nil,
     _ transform: @escaping (Element) async throws -> T
   ) async throws -> [T.Element] {
-    return try await withThrowingTaskGroup(of: (offset: Int, value: T).self) { group in
+    try await withThrowingTaskGroup(of: (offset: Int, value: T).self) { group in
       var c = 0
       for element in self {
         let idx = c
         c += 1
         group.addTask(priority: priority) {
-          return try await (idx, transform(element))
+          try await (idx, transform(element))
         }
       }
 
-      var result = Array<T?>(repeating: nil, count: c)
+      var result = [T?](repeating: nil, count: c)
       while let next = try await group.next() {
         result[next.offset] = next.value
       }

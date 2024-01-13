@@ -3,9 +3,9 @@ import Combine
 import Foundation
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher {
+public extension Publisher {
   /// Copied from https://gist.github.com/ollieatkinson/c14d60d7a83f7cbbe384d0c4f486a46b
-  public func retry<S: Scheduler>(
+  func retry<S: Scheduler>(
     _ max: Int = Int.max,
     delay: Publishers.RetryDelay<Self, S>.TimingFunction,
     scheduler: S
@@ -15,8 +15,8 @@ extension Publisher {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publishers {
-  public struct RetryDelay<Upstream: Publisher, S: Scheduler>: Publisher {
+public extension Publishers {
+  struct RetryDelay<Upstream: Publisher, S: Scheduler>: Publisher {
     public typealias Output = Upstream.Output
     public typealias Failure = Upstream.Failure
 
@@ -57,8 +57,8 @@ extension Publishers {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publishers.RetryDelay {
-  public typealias TimingFunction = RetryDelayTimingFunction
+public extension Publishers.RetryDelay {
+  typealias TimingFunction = RetryDelayTimingFunction
 }
 
 public struct RetryDelayTimingFunction {
@@ -74,10 +74,10 @@ public struct RetryDelayTimingFunction {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publishers.RetryDelay.TimingFunction {
-  public static let immediate: Self = .after(seconds: 0)
-  public static func after(seconds time: TimeInterval) -> Self { .init(time) }
-  public static func exponential(unit: TimeInterval = 0.5) -> Self {
+public extension Publishers.RetryDelay.TimingFunction {
+  static let immediate: Self = .after(seconds: 0)
+  static func after(seconds time: TimeInterval) -> Self { .init(time) }
+  static func exponential(unit: TimeInterval = 0.5) -> Self {
     .init { n in
       TimeInterval.random(in: unit ... unit * pow(2, TimeInterval(n - 1)))
     }
@@ -87,7 +87,7 @@ extension Publishers.RetryDelay.TimingFunction {
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
 extension Publishers.RetryDelay.TimingFunction: ExpressibleByFloatLiteral {
   public init(_ value: TimeInterval) {
-    self.init{ _ in value }
+    self.init { _ in value }
   }
 
   public init(floatLiteral value: TimeInterval) {

@@ -1,6 +1,6 @@
 #if !(os(iOS) && (arch(i386) || arch(arm)))
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Operator =>
 
@@ -11,7 +11,7 @@ precedencegroup BindingPrecedence {
   higherThan: AssignmentPrecedence
 }
 
-infix operator => : BindingPrecedence
+infix operator =>: BindingPrecedence
 
 // MARK: - UnidirectionalBinding
 
@@ -22,17 +22,17 @@ public protocol UnidirectionalBinding: Subscriber, Cancellable {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension UnidirectionalBinding {
+public extension UnidirectionalBinding {
   @discardableResult
-  public static func => <P: Publisher>(source: P, subscriber: Self) -> AnyCancellable where Input == P.Output?, Failure == P.Failure {
+  static func => <P: Publisher>(source: P, subscriber: Self) -> AnyCancellable where Input == P.Output?, Failure == P.Failure {
     source.map(Optional.some) => subscriber
   }
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher {
+public extension Publisher {
   @discardableResult
-  public static func => <S: UnidirectionalBinding>(
+  static func => <S: UnidirectionalBinding>(
     source: Self,
     subscriber: S
   ) -> AnyCancellable where Output == S.Input, Failure == S.Failure {

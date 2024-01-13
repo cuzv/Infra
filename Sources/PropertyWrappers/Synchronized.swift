@@ -19,7 +19,7 @@ public struct Synchronized<Value> {
     }
     set {
       queue.sync(flags: .barrier) {
-        self.value = newValue
+        value = newValue
       }
     }
   }

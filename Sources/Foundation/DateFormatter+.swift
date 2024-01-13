@@ -1,7 +1,7 @@
 import Foundation
 
-extension DateFormatter {
-  public convenience init(
+public extension DateFormatter {
+  convenience init(
     dateStyle: Style,
     timeStyle: Style
   ) {

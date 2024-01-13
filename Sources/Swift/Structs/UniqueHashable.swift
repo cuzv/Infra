@@ -18,9 +18,9 @@ extension UniqueHashable: Hashable {
   }
 }
 
-extension Sequence where Iterator.Element: Hashable {
+public extension Sequence where Iterator.Element: Hashable {
   /// Complexity: o(N)
-  public var hashableUniqued: [Iterator.Element] {
+  var hashableUniqued: [Iterator.Element] {
     map(UniqueHashable.init(wrapped:))
       .removingDuplicates()
       .map(\.wrapped)

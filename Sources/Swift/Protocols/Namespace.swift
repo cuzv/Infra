@@ -1,14 +1,14 @@
 public protocol ExtensionsProvider {}
 
-extension ExtensionsProvider {
+public extension ExtensionsProvider {
   /// A proxy which hosts reactive extensions for `self`.
-  public var ext: Extnsion<Self> {
-    return Extnsion(self)
+  var ext: Extnsion<Self> {
+    Extnsion(self)
   }
 
   /// A proxy which hosts static reactive extensions for the type of `self`.
-  public static var ext: Extnsion<Self>.Type {
-    return Extnsion<Self>.self
+  static var ext: Extnsion<Self>.Type {
+    Extnsion<Self>.self
   }
 }
 

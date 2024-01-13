@@ -1,7 +1,7 @@
 import Foundation
 
-extension NSMutableAttributedString {
-  public func replaceCharacters(
+public extension NSMutableAttributedString {
+  func replaceCharacters(
     of target: String,
     with replacement: String
   ) {
@@ -13,7 +13,7 @@ extension NSMutableAttributedString {
     }
   }
 
-  public func replaceCharacters(
+  func replaceCharacters(
     of target: String,
     with replacement: NSAttributedString
   ) {
@@ -28,8 +28,8 @@ extension NSMutableAttributedString {
 
 #if canImport(UIKit)
 import UIKit
-extension NSAttributedString {
-  public func layoutSize(withConstrainedWidth width: CGFloat) -> CGSize {
+public extension NSAttributedString {
+  func layoutSize(withConstrainedWidth width: CGFloat) -> CGSize {
     let size = CGSize(width: width, height: .greatestFiniteMagnitude)
     let options: NSStringDrawingOptions = [
       .usesLineFragmentOrigin,

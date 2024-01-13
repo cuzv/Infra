@@ -1,7 +1,7 @@
-import os
 import Foundation
+import os
 
-public struct Log {
+public enum Log {
   public enum Level: UInt8, CaseIterable {
     case debug
     case info
@@ -10,11 +10,11 @@ public struct Log {
     var stringValue: String {
       switch self {
       case .debug:
-        return "DEBUG"
+        "DEBUG"
       case .info:
-        return "INFO"
+        "INFO"
       case .error:
-        return "ERROR"
+        "ERROR"
       }
     }
 
@@ -22,11 +22,11 @@ public struct Log {
     var osLogType: OSLogType {
       switch self {
       case .debug:
-        return .debug
+        .debug
       case .info:
-        return .info
+        .info
       case .error:
-        return .error
+        .error
       }
     }
   }
@@ -43,12 +43,12 @@ public struct Log {
     function: String = #function,
     line: Int = #line
   ) {
-    if let activeLevel = activeLevel, level.rawValue < activeLevel.rawValue {
+    if let activeLevel, level.rawValue < activeLevel.rawValue {
       return
     }
 
     var message = String(describing: message())
-    if let label = label {
+    if let label {
       message = "#\(label)・" + message
     }
 
@@ -70,7 +70,7 @@ public struct Log {
     identifier: AnyObject? = nil,
     provider: LogProvider = OSLog.pointsOfInterest
   ) {
-    let signpostID: OSSignpostID = nil != identifier ?
+    let signpostID: OSSignpostID = identifier != nil ?
       OSSignpostID(log: provider.log, object: identifier!) :
       .exclusive
     os_signpost(.begin, log: provider.log, name: name, signpostID: signpostID)
@@ -82,7 +82,7 @@ public struct Log {
     identifier: AnyObject? = nil,
     provider: LogProvider = OSLog.pointsOfInterest
   ) {
-    let signpostID: OSSignpostID = nil != identifier ?
+    let signpostID: OSSignpostID = identifier != nil ?
       OSSignpostID(log: provider.log, object: identifier!) :
       .exclusive
     os_signpost(.end, log: provider.log, name: name, signpostID: signpostID)
@@ -94,16 +94,16 @@ public struct Log {
     identifier: AnyObject? = nil,
     provider: LogProvider = OSLog.pointsOfInterest
   ) {
-    let signpostID: OSSignpostID = nil != identifier ?
+    let signpostID: OSSignpostID = identifier != nil ?
       OSSignpostID(log: provider.log, object: identifier!) :
       .exclusive
     os_signpost(.event, log: provider.log, name: name, signpostID: signpostID)
   }
 }
 
-extension OSLog {
+public extension OSLog {
   @available(OSX 10.14, iOS 10.0, watchOS 5.0, tvOS 12.0, *)
-  public convenience init(category: String) {
+  convenience init(category: String) {
     self.init(
       subsystem: Bundle.main.bundleIdentifier ?? "com.redrainlab",
       category: category
@@ -111,7 +111,7 @@ extension OSLog {
   }
 
   @available(OSX 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
-  public convenience init(category: Category) {
+  convenience init(category: Category) {
     self.init(
       subsystem: Bundle.main.bundleIdentifier ?? "com.redrainlab",
       category: category
@@ -119,7 +119,7 @@ extension OSLog {
   }
 
   @available(OSX 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
-  public static let pointsOfInterest = OSLog(
+  static let pointsOfInterest = OSLog(
     subsystem: (Bundle.main.bundleIdentifier ?? "com.redrainlab") + ".activities",
     category: .pointsOfInterest
   )
@@ -155,6 +155,6 @@ public extension LogProvider {
 @available(OSX 10.14, iOS 10.0, watchOS 5.0, tvOS 12.0, *)
 extension OSLog: LogProvider {
   public var log: OSLog {
-    return self
+    self
   }
 }

@@ -11,12 +11,11 @@ public final class UnfairLock: Locking {
   }
 
   public func unlock() {
-
     os_unfair_lock_unlock(&unfairLock)
   }
 
   public func `try`() -> Bool {
-    return os_unfair_lock_trylock(&unfairLock)
+    os_unfair_lock_trylock(&unfairLock)
   }
 }
 

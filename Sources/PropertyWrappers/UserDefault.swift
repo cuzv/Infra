@@ -74,6 +74,7 @@ public struct UserDefault<Value: PropertyListConvertible> {
 }
 
 // MARK: - PropertyListConvertible
+
 /// A type that can convert itself to and from a plist-compatible type (for storage in a plist).
 public protocol PropertyListConvertible {
   /// The type that's used for storage in the plist.
@@ -92,12 +93,12 @@ public protocol PropertyListConvertible {
 }
 
 /// Default implementation for native property list types that don't need any conversion.
-extension PropertyListConvertible where Storage == Self {
-  public init?(propertyListValue plistValue: Self) {
+public extension PropertyListConvertible where Storage == Self {
+  init?(propertyListValue plistValue: Self) {
     self = plistValue
   }
 
-  public var propertyListValue: Self { self }
+  var propertyListValue: Self { self }
 }
 
 extension String: PropertyListConvertible { public typealias Storage = Self }
@@ -132,8 +133,8 @@ extension Data: PropertyListConvertible { public typealias Storage = Self }
 /// - Note: You must ensure that your type encodes itself as a dictionary
 ///   (`KeyedEncodingContainer`) and not as an array (`UnkeyedEncodingContainer`) or as a
 ///   single value (`SingleValueEncodingContainer`).
-extension PropertyListConvertible where Self: Codable, Self.Storage == [String: PropertyListNativelyStorable] {
-  public init?(propertyListValue plistDict: [String: PropertyListNativelyStorable]) {
+public extension PropertyListConvertible where Self: Codable, Self.Storage == [String: PropertyListNativelyStorable] {
+  init?(propertyListValue plistDict: [String: PropertyListNativelyStorable]) {
     let decoder = PropertyListDecoder()
     do {
       let plistData = try PropertyListSerialization.data(fromPropertyList: plistDict, format: .binary, options: 0)
@@ -145,7 +146,7 @@ extension PropertyListConvertible where Self: Codable, Self.Storage == [String: 
     }
   }
 
-  public var propertyListValue: [String: PropertyListNativelyStorable] {
+  var propertyListValue: [String: PropertyListNativelyStorable] {
     let encoder = PropertyListEncoder()
     encoder.outputFormat = .binary
     do {
@@ -184,7 +185,7 @@ extension Optional: PropertyListConvertible where Wrapped: PropertyListConvertib
   }
 
   public var propertyListValue: Wrapped.Storage? {
-    return self?.propertyListValue
+    self?.propertyListValue
   }
 }
 
@@ -206,7 +207,7 @@ extension Array: PropertyListConvertible where Element: PropertyListConvertible 
   }
 
   public var propertyListValue: [Element.Storage] {
-    map { $0.propertyListValue }
+    map(\.propertyListValue)
   }
 }
 
@@ -233,6 +234,7 @@ extension Dictionary: PropertyListConvertible where Key == String, Value: Proper
 }
 
 // MARK: - PropertyListNativelyStorable
+
 /// A type that can be natively stored in a property list, i.e. a _property list object_.
 ///
 /// This is a marker protocol, i.e. it has no requirements. You should not conform your own types to it.

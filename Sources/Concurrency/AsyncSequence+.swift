@@ -1,6 +1,6 @@
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, macCatalyst 15.0, *)
-extension AsyncSequence {
-  public func forEach(_ body: (Element) async throws -> Void) async throws {
+public extension AsyncSequence {
+  func forEach(_ body: (Element) async throws -> Void) async throws {
     for try await element in self {
       try await body(element)
     }

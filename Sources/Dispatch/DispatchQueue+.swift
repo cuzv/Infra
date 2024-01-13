@@ -1,25 +1,25 @@
-import Foundation
 import Dispatch
+import Foundation
 
 // https://github.com/SwifterSwift/SwifterSwift/blob/669d03d62566c5010b2edec91616ed7920807981/Sources/SwifterSwift/Dispatch/DispatchQueueExtensions.swift#L32
-extension DispatchQueue {
+public extension DispatchQueue {
   /// A Boolean value indicating whether the current dispatch queue is the main queue.
-  public static var isMain: Bool {
-    struct Static {
+  static var isMain: Bool {
+    enum Static {
       static let key: DispatchSpecificKey<Void> = {
         let key = DispatchSpecificKey<Void>()
         DispatchQueue.main.setSpecific(key: key, value: ())
         return key
       }()
     }
-    return nil != getSpecific(key: Static.key)
+    return getSpecific(key: Static.key) != nil
   }
 
   /// Returns a Boolean value indicating whether the current dispatch queue is the specified queue.
   ///
   /// - Parameter queue: The queue to compare against.
   /// - Returns: `true` if the current queue is the specified queue, otherwise `false`.
-  public static func `is`(_ queue: DispatchQueue) -> Bool {
+  static func `is`(_ queue: DispatchQueue) -> Bool {
     let key = DispatchSpecificKey<Void>()
 
     queue.setSpecific(key: key, value: ())
@@ -27,11 +27,11 @@ extension DispatchQueue {
       queue.setSpecific(key: key, value: nil)
     }
 
-    return nil != getSpecific(key: key)
+    return getSpecific(key: key) != nil
   }
 
-  public static func once(token: String, block: () -> Void) {
-    struct Static {
+  static func once(token: String, block: () -> Void) {
+    enum Static {
       static var onceTracker = [String]()
     }
 
@@ -46,7 +46,7 @@ extension DispatchQueue {
     }
   }
 
-  public func safeAsync(execute block: @escaping () -> Void) {
+  func safeAsync(execute block: @escaping () -> Void) {
     if DispatchQueue.is(self) {
       block()
     } else {
@@ -54,14 +54,14 @@ extension DispatchQueue {
     }
   }
 
-  public func delay(
+  func delay(
     timeInterval: DispatchTimeInterval,
     execute work: DispatchWorkItem
   ) {
     asyncAfter(deadline: .now() + timeInterval, execute: work)
   }
 
-  public func async(
+  func async(
     execute asyncTask: @escaping (@escaping () -> Void) -> Void
   ) {
     precondition(self != .main)

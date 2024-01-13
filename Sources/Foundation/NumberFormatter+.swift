@@ -1,7 +1,7 @@
 import Foundation
 
-extension NumberFormatter {
-  public convenience init(
+public extension NumberFormatter {
+  convenience init(
     numberStyle: Style,
     locale: Locale = .current,
     roundingMode: RoundingMode = .halfUp,
@@ -32,28 +32,28 @@ extension NumberFormatter {
     self.positivePrefix = positivePrefix
   }
 
-  public static let decimal = NumberFormatter(numberStyle: .decimal)
-  public static let percent = NumberFormatter(numberStyle: .percent)
-  public static let scientific = NumberFormatter(numberStyle: .scientific)
-  public static let ordinal = NumberFormatter(numberStyle: .ordinal)
-  public static let currency = NumberFormatter(numberStyle: .currency)
-  public static let currencyPlural = NumberFormatter(numberStyle: .currencyPlural)
+  static let decimal = NumberFormatter(numberStyle: .decimal)
+  static let percent = NumberFormatter(numberStyle: .percent)
+  static let scientific = NumberFormatter(numberStyle: .scientific)
+  static let ordinal = NumberFormatter(numberStyle: .ordinal)
+  static let currency = NumberFormatter(numberStyle: .currency)
+  static let currencyPlural = NumberFormatter(numberStyle: .currencyPlural)
 }
 
-extension NumberFormatter {
-  public func stringify(_ value: Double) -> String {
+public extension NumberFormatter {
+  func stringify(_ value: Double) -> String {
     string(from: NSNumber(value: value)) ?? String(value)
   }
 
-  public func stringify(_ value: Float) -> String {
+  func stringify(_ value: Float) -> String {
     string(from: NSNumber(value: value)) ?? String(value)
   }
 
-  public func stringify(_ value: Int) -> String {
+  func stringify(_ value: Int) -> String {
     string(from: NSNumber(value: value)) ?? String(value)
   }
 
-  public func stringify(_ value: Int64) -> String {
+  func stringify(_ value: Int64) -> String {
     string(from: NSNumber(value: value)) ?? String(value)
   }
 }

@@ -1,10 +1,10 @@
 #if !(os(iOS) && (arch(i386) || arch(arm)))
-import Foundation
 import Combine
+import Foundation
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Subscribers {
-  public final class Binder<Target: BindingProvider & AnyObject, Input> {
+public extension Subscribers {
+  final class Binder<Target: BindingProvider & AnyObject, Input> {
     private(set) weak var target: Target?
     private let receiveCompletion: (Target, Completion<Never>) -> Void
     private let receiveValue: (Target, Input) -> Void
@@ -21,7 +21,7 @@ extension Subscribers {
     }
 
     private func withTarget(_ body: (Target) -> Void) {
-      if let target = target {
+      if let target {
         body(target)
       } else {
         cancel()
@@ -31,8 +31,8 @@ extension Subscribers {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Subscribers.Binder where Input == Void {
-  public convenience init(
+public extension Subscribers.Binder where Input == Void {
+  convenience init(
     target: Target,
     receiveCompletion: @escaping (Target, Subscribers.Completion<Failure>) -> Void = { _, _ in },
     receiveValue: @escaping (Target) -> Void
@@ -46,8 +46,8 @@ extension Subscribers.Binder where Input == Void {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Subscribers.Binder where Input == Never {
-  public convenience init(
+public extension Subscribers.Binder where Input == Never {
+  convenience init(
     target: Target,
     receiveCompletion: @escaping (Target, Subscribers.Completion<Failure>) -> Void
   ) {
@@ -90,12 +90,12 @@ extension Subscribers.Binder: Cancellable {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher where Failure == Never {
+public extension Publisher where Failure == Never {
   @discardableResult
-  public func bind<Target: BindingProvider & AnyObject>(
-    to sink: Subscribers.Binder<Target, Output>
+  func bind(
+    to sink: Subscribers.Binder<some BindingProvider & AnyObject, Output>
   ) -> AnyCancellable {
-    guard let target = sink.target else { return AnyCancellable({}) }
+    guard let target = sink.target else { return AnyCancellable {} }
     let cancellable = AnyCancellable(sink)
     target.store(cancellable)
     subscribe(sink)
@@ -103,38 +103,38 @@ extension Publisher where Failure == Never {
   }
 
   @discardableResult
-  public func bind<Target: BindingProvider & AnyObject>(
-    to sink: Subscribers.Binder<Target, Output?>
+  func bind(
+    to sink: Subscribers.Binder<some BindingProvider & AnyObject, Output?>
   ) -> AnyCancellable {
     map(Optional.some).bind(to: sink)
   }
 
   @discardableResult
-  public func bind(to subject: CurrentValueSubject<Output, Never>) -> AnyCancellable {
+  func bind(to subject: CurrentValueSubject<Output, Never>) -> AnyCancellable {
     let cancellable = subscribe(subject)
     subject.store(cancellable)
     return cancellable
   }
 
   @discardableResult
-  public func bind(to subject: CurrentValueSubject<Output?, Never>) -> AnyCancellable {
+  func bind(to subject: CurrentValueSubject<Output?, Never>) -> AnyCancellable {
     map(Optional.some).bind(to: subject)
   }
 
   @discardableResult
-  public func bind(to subject: PassthroughSubject<Output, Never>) -> AnyCancellable {
+  func bind(to subject: PassthroughSubject<Output, Never>) -> AnyCancellable {
     let cancellable = subscribe(subject)
     subject.store(cancellable)
     return cancellable
   }
 
   @discardableResult
-  public func bind(to subject: PassthroughSubject<Output?, Never>) -> AnyCancellable {
+  func bind(to subject: PassthroughSubject<Output?, Never>) -> AnyCancellable {
     map(Optional.some).bind(to: subject)
   }
 
   @discardableResult
-  public func bind<Target: BindingProvider & AnyObject>(
+  func bind<Target: BindingProvider & AnyObject>(
     to target: Target,
     action: @escaping (Target, Output) -> Void
   ) -> AnyCancellable {

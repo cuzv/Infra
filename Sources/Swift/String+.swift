@@ -1,57 +1,57 @@
 import Foundation
 
-extension String {
-  public func trimmingWhitespaces() -> String {
+public extension String {
+  func trimmingWhitespaces() -> String {
     trimmingCharacters(in: .whitespaces)
   }
 
-  public func trimmingWhitespacesAndNewlines() -> String {
+  func trimmingWhitespacesAndNewlines() -> String {
     trimmingCharacters(in: .whitespacesAndNewlines)
   }
 
-  public func trimmingCharacters(in str: String) -> String {
+  func trimmingCharacters(in str: String) -> String {
     trimmingCharacters(in: CharacterSet(charactersIn: str))
   }
 
-  public func urlDecoded() -> String {
+  func urlDecoded() -> String {
     removingPercentEncoding ?? self
   }
 
-  public mutating func urlDecode() {
+  mutating func urlDecode() {
     self = urlDecoded()
   }
 
-  public func urlEncoded() -> String {
+  func urlEncoded() -> String {
     addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? self
   }
 
-  public mutating func urlEncode() {
+  mutating func urlEncode() {
     self = urlEncoded()
   }
 
-  public func encodingPercent(
+  func encodingPercent(
     withAllowedCharacters allowedCharacters: CharacterSet
   ) -> String {
     addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? self
   }
 
-  public var characters: [Character] {
+  var characters: [Character] {
     Array(self)
   }
 
-  public func char(at location: Int) -> Character? {
-    guard location >= 0 && location < count else { return nil }
+  func char(at location: Int) -> Character? {
+    guard location >= 0, location < count else { return nil }
     return self[index(startIndex, offsetBy: location)]
   }
 
-  public func contains(_ string: String, caseSensitive: Bool = true) -> Bool {
+  func contains(_ string: String, caseSensitive: Bool = true) -> Bool {
     if !caseSensitive {
-      return nil != range(of: string, options: .caseInsensitive)
+      return range(of: string, options: .caseInsensitive) != nil
     }
-    return nil != range(of: string)
+    return range(of: string) != nil
   }
 
-  public func substring(in range: CountableRange<Int>) -> String? {
+  func substring(in range: CountableRange<Int>) -> String? {
     guard let lowerIndex = index(
       startIndex,
       offsetBy: max(0, range.lowerBound),
@@ -65,11 +65,11 @@ extension String {
     return String(self[lowerIndex ..< upperIndex])
   }
 
-  public subscript(safe range: CountableRange<Int>) -> String? {
+  subscript(safe range: CountableRange<Int>) -> String? {
     substring(in: range)
   }
 
-  public func substring(in range: ClosedRange<Int>) -> String? {
+  func substring(in range: ClosedRange<Int>) -> String? {
     guard let lowerIndex = index(
       startIndex,
       offsetBy: max(0, range.lowerBound),
@@ -83,12 +83,12 @@ extension String {
     return String(self[lowerIndex ... upperIndex])
   }
 
-  public subscript(safe range: ClosedRange<Int>) -> String? {
+  subscript(safe range: ClosedRange<Int>) -> String? {
     substring(in: range)
   }
 
-  public func substring(from start: Int, length: Int) -> String? {
-    guard length >= 0, start >= 0, start < count  else { return nil }
+  func substring(from start: Int, length: Int) -> String? {
+    guard length >= 0, start >= 0, start < count else { return nil }
     let end = start + length
     if end <= count {
       return substring(in: start ..< end)
@@ -97,15 +97,15 @@ extension String {
     }
   }
 
-  public func substring(from start: Int) -> String? {
+  func substring(from start: Int) -> String? {
     substring(in: start ..< count)
   }
 
-  public func substring(to end: Int) -> String? {
+  func substring(to end: Int) -> String? {
     substring(in: 0 ..< end)
   }
 
-  public func position(of str: String) -> CountableRange<Int>? {
+  func position(of str: String) -> CountableRange<Int>? {
     if let range = range(of: str) {
       return range.lowerBound.utf16Offset(
         in: self
@@ -114,7 +114,7 @@ extension String {
     return nil
   }
 
-  public func replacingCharacters(
+  func replacingCharacters(
     in range: CountableRange<Int>,
     with: String
   ) -> String {
@@ -131,7 +131,7 @@ extension String {
     return replacingCharacters(in: lowerIndex ..< upperIndex, with: with)
   }
 
-  public func replacingCharacters(
+  func replacingCharacters(
     in range: ClosedRange<Int>,
     with: String
   ) -> String {
@@ -148,112 +148,113 @@ extension String {
     return replacingCharacters(in: lowerIndex ..< upperIndex, with: with)
   }
 
-  public func matches(pattern: String) -> Bool {
+  func matches(pattern: String) -> Bool {
     let emailTest = NSPredicate(format: "SELF MATCHES %@", pattern)
     return emailTest.evaluate(with: self)
   }
 
-  public func isEmail() -> Bool {
+  func isEmail() -> Bool {
     // http://stackoverflow.com/questions/25471114/how-to-validate-an-e-mail-address-in-swift
     // http://emailregex.com/
     let regex = "^(?:[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[\\p{L}0-9!#$%\\&'*+/=?\\^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\p{L}0-9](?:[a-z0-9-]*[\\p{L}0-9])?\\.)+[\\p{L}0-9](?:[\\p{L}0-9-]*[\\p{L}0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[\\p{L}0-9-]*[\\p{L}0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])$"
     return matches(pattern: regex)
   }
 
-  public func base64Decoded() -> String {
+  func base64Decoded() -> String {
     if let decodedData = Data(base64Encoded: self),
-       let result = String(data: decodedData, encoding: .utf8) {
+       let result = String(data: decodedData, encoding: .utf8)
+    {
       return result
     }
     return self
   }
 
-  public func base64Encoded() -> String {
+  func base64Encoded() -> String {
     if let plainData = data(using: .utf8) {
       return plainData.base64EncodedString()
     }
     return self
   }
 
-  public func hasLetters() -> Bool {
-    nil != rangeOfCharacter(from: .letters, options: .numeric, range: nil)
+  func hasLetters() -> Bool {
+    rangeOfCharacter(from: .letters, options: .numeric, range: nil) != nil
   }
 
-  public func hasNumbers() -> Bool {
-    nil != rangeOfCharacter(from: .decimalDigits, options: .literal, range: nil)
+  func hasNumbers() -> Bool {
+    rangeOfCharacter(from: .decimalDigits, options: .literal, range: nil) != nil
   }
 
-  public func isAlphabetic() -> Bool {
+  func isAlphabetic() -> Bool {
     hasLetters() && !hasNumbers()
   }
 
-  public func isAlphaNumeric() -> Bool {
+  func isAlphaNumeric() -> Bool {
     let comps = components(separatedBy: .alphanumerics)
     return comps.joined(separator: "").count == 0 && hasLetters() && hasNumbers()
   }
 
   @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-  public func isNumeric() -> Bool {
+  func isNumeric() -> Bool {
     let scanner = Scanner(string: self)
     scanner.locale = NSLocale.current
-    return nil != scanner.scanDecimal() && scanner.isAtEnd
+    return scanner.scanDecimal() != nil && scanner.isAtEnd
   }
 
-  public func isDigits() -> Bool {
+  func isDigits() -> Bool {
     CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: self))
   }
 
-  public func isPalindrome() -> Bool {
-    let letters = filter { $0.isLetter }
+  func isPalindrome() -> Bool {
+    let letters = filter(\.isLetter)
     guard !letters.isEmpty else { return false }
     let midIndex = letters.index(letters.startIndex, offsetBy: letters.count / 2)
-    let firstHalf = letters[letters.startIndex..<midIndex]
-    let secondHalf = letters[midIndex..<letters.endIndex].reversed()
+    let firstHalf = letters[letters.startIndex ..< midIndex]
+    let secondHalf = letters[midIndex ..< letters.endIndex].reversed()
     return !Swift.zip(firstHalf, secondHalf).contains(where: {
       $0.lowercased() != $1.lowercased()
     })
   }
 }
 
-extension String {
-  public var nsString: NSString {
+public extension String {
+  var nsString: NSString {
     NSString(string: self)
   }
 
-  public var lastPathComponent: String {
+  var lastPathComponent: String {
     (self as NSString).lastPathComponent
   }
 
-  public var pathExtension: String {
+  var pathExtension: String {
     (self as NSString).pathExtension
   }
 
-  public var deletingLastPathComponent: String {
+  var deletingLastPathComponent: String {
     (self as NSString).deletingLastPathComponent
   }
 
-  public var deletingPathExtension: String {
+  var deletingPathExtension: String {
     (self as NSString).deletingPathExtension
   }
 
-  public var pathComponents: [String] {
+  var pathComponents: [String] {
     (self as NSString).pathComponents
   }
 
-  public func appendingPathComponent(_ str: String) -> String {
+  func appendingPathComponent(_ str: String) -> String {
     (self as NSString).appendingPathComponent(str)
   }
 
-  public func appendingPathExtension(_ str: String) -> String {
+  func appendingPathExtension(_ str: String) -> String {
     (self as NSString).appendingPathExtension(str) ?? self
   }
 }
 
-extension String {
+public extension String {
   // a: 97, z: 122
   // A: 65, Z: 90
 
-  public func encodingLetters() -> String {
+  func encodingLetters() -> String {
     var result = [String.Element]()
 
     for ch in self {
@@ -270,7 +271,7 @@ extension String {
           }
         }
 
-        assert(97...122 ~= candidate || 65...90 ~= candidate)
+        assert(97 ... 122 ~= candidate || 65 ... 90 ~= candidate)
 
         result.append(.init(.init(candidate)))
       } else {
@@ -281,7 +282,7 @@ extension String {
     return String(result)
   }
 
-  public func decodingLetters() -> String {
+  func decodingLetters() -> String {
     var result = [String.Element]()
 
     for ch in self {
@@ -298,7 +299,7 @@ extension String {
           }
         }
 
-        assert(97...122 ~= candidate || 65...90 ~= candidate)
+        assert(97 ... 122 ~= candidate || 65 ... 90 ~= candidate)
 
         result.append(.init(.init(candidate)))
       } else {
@@ -322,7 +323,7 @@ public extension String {
     set {
       let pivot = offset >= 0 ? startIndex : endIndex
       let idx = index(pivot, offsetBy: offset)
-      replaceSubrange(idx...idx, with: [newValue])
+      replaceSubrange(idx ... idx, with: [newValue])
     }
   }
 }

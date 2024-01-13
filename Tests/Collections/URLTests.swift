@@ -1,6 +1,6 @@
 import Foundation
-import XCTest
 @testable import Infrastructure
+import XCTest
 
 class URLTests: XCTestCase {
   func testQueryItems1() {
@@ -23,13 +23,13 @@ class URLTests: XCTestCase {
     XCTAssertEqual(url.queryValue(for: "arr"), ["1", "2"])
   }
 
-  func testQueryItems3(){
+  func testQueryItems3() {
     var url: URL = "https://google.com?arr=1&arr=2"
     url.deleteQueryItems()
     XCTAssertEqual(url.absoluteString, "https://google.com")
   }
 
-  func testQueryItems4(){
+  func testQueryItems4() {
     var url: URL = "https://google.com?arr=1&arr=2"
     url.queryItems = []
     XCTAssertEqual(url.absoluteString, "https://google.com")

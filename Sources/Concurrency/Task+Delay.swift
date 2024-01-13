@@ -1,12 +1,12 @@
 import Foundation
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, macCatalyst 15.0, *)
-extension Task where Failure == Error {
+public extension Task where Failure == Error {
   /// Delaying an asynchronous Swift Task
   ///
   /// Copied from https://www.swiftbysundell.com/articles/delaying-an-async-swift-task/
   @discardableResult
-  public init(
+  init(
     priority: TaskPriority? = nil,
     delay interval: TimeInterval,
     operation: @escaping @Sendable () async throws -> Success

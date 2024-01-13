@@ -1,6 +1,6 @@
 import Foundation
-import XCTest
 @testable import Infrastructure
+import XCTest
 
 class ArrayTests: XCTestCase {
   func testSafeSwap() {

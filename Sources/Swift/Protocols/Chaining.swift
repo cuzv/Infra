@@ -6,15 +6,14 @@ import CoreGraphics
 import UIKit.UIGeometry
 #endif
 
-public protocol Chaining {
-}
+public protocol Chaining {}
 
 // MARK: - Assignment
 
-extension Chaining where Self: Any {
+public extension Chaining where Self: Any {
   @inline(__always)
   @discardableResult
-  public func assigning<V>(
+  func assigning<V>(
     _ value: V,
     to keyPath: WritableKeyPath<Self, V>
   ) -> Self {
@@ -25,7 +24,7 @@ extension Chaining where Self: Any {
 
   @inline(__always)
   @discardableResult
-  public func assigning<M, V>(
+  func assigning<M, V>(
     _ value: V,
     to keyPath: WritableKeyPath<M, V>,
     on memeber: WritableKeyPath<Self, M>
@@ -39,7 +38,7 @@ extension Chaining where Self: Any {
 
   @inline(__always)
   @discardableResult
-  public func assigning<M, V>(
+  func assigning<M, V>(
     _ value: V,
     to keyPath: WritableKeyPath<M, V>,
     on memeber: WritableKeyPath<Self, M?>
@@ -52,10 +51,10 @@ extension Chaining where Self: Any {
   }
 }
 
-extension Chaining where Self: AnyObject {
+public extension Chaining where Self: AnyObject {
   @inline(__always)
   @discardableResult
-  public func assigning<V>(
+  func assigning<V>(
     _ value: V,
     to keyPath: ReferenceWritableKeyPath<Self, V>
   ) -> Self {
@@ -65,7 +64,7 @@ extension Chaining where Self: AnyObject {
 
   @inline(__always)
   @discardableResult
-  public func assigning<M, V>(
+  func assigning<M, V>(
     _ value: V,
     to keyPath: ReferenceWritableKeyPath<M, V>,
     on member: (Self) -> M
@@ -76,7 +75,7 @@ extension Chaining where Self: AnyObject {
 
   @inline(__always)
   @discardableResult
-  public func assigning<M, V>(
+  func assigning<M, V>(
     _ value: V,
     to keyPath: ReferenceWritableKeyPath<M, V>,
     on member: (Self) -> M?
@@ -88,10 +87,10 @@ extension Chaining where Self: AnyObject {
 
 // MARK: - Access
 
-extension Chaining where Self: Any {
+public extension Chaining where Self: Any {
   @inlinable
   @discardableResult
-  public func accessing(
+  func accessing(
     _ operation: (inout Self) throws -> Void
   ) rethrows -> Self {
     var this = self
@@ -100,10 +99,10 @@ extension Chaining where Self: Any {
   }
 }
 
-extension Chaining where Self: AnyObject {
+public extension Chaining where Self: AnyObject {
   @inlinable
   @discardableResult
-  public func accessing(
+  func accessing(
     _ operation: (Self) throws -> Void
   ) rethrows -> Self {
     try operation(self)

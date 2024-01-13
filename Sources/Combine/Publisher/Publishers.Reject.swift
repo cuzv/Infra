@@ -6,27 +6,27 @@ public extension Publisher {
   func reject(
     _ isExcluded: @escaping (Output) -> Bool
   ) -> Publishers.Filter<Self> {
-    filter({ !isExcluded($0) })
+    filter { !isExcluded($0) }
   }
 
   func tryReject(
     _ isExcluded: @escaping (Output) throws -> Bool
   ) -> Publishers.TryFilter<Self> {
-    tryFilter({ try !isExcluded($0) })
+    tryFilter { try !isExcluded($0) }
   }
 
   func reject(
     _ isExcluded: Output...
   ) -> Publishers.Filter<Self> where Output: Equatable {
-    filter({ !isExcluded.contains($0) })
+    filter { !isExcluded.contains($0) }
   }
 
   func reject(
     _ isExcludedA: @escaping (Output) -> Bool,
     _ isExcludedB: @escaping (Output) -> Bool
   ) -> Publishers.Filter<Self> {
-    filter({ !isExcludedA($0) })
-      .filter({ !isExcludedB($0) })
+    filter { !isExcludedA($0) }
+      .filter { !isExcludedB($0) }
   }
 
   func reject(
@@ -34,9 +34,9 @@ public extension Publisher {
     _ isExcludedB: @escaping (Output) -> Bool,
     _ isExcludedC: @escaping (Output) -> Bool
   ) -> Publishers.Filter<Self> {
-    filter({ !isExcludedA($0) })
-      .filter({ !isExcludedB($0) })
-      .filter({ !isExcludedC($0) })
+    filter { !isExcludedA($0) }
+      .filter { !isExcludedB($0) }
+      .filter { !isExcludedC($0) }
   }
 }
 #endif

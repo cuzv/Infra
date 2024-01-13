@@ -6,31 +6,31 @@ public protocol Differentiable {
   var current: Value { get }
 }
 
-extension Differentiable
-where
+public extension Differentiable
+  where
   Value: RangeReplaceableCollection,
   Value.Element: Hashable
 {
-  public var mergence: [Value.Element] {
+  var mergence: [Value.Element] {
     if current.isEmpty {
-      return .init(last)
+      .init(last)
     } else if last.isEmpty {
-      return .init(current)
+      .init(current)
     } else {
-      return (current + last)
+      (current + last)
         .map(UniqueHashable.init(wrapped:))
         .removingDuplicates()
         .map(\.wrapped)
     }
   }
 
-  public var addition: [Value.Element] {
+  var addition: [Value.Element] {
     if current.isEmpty {
-      return []
+      []
     } else if last.isEmpty {
-      return .init(current)
+      .init(current)
     } else {
-      return current.map(UniqueHashable.init(wrapped:))
+      current.map(UniqueHashable.init(wrapped:))
         .subtracting(
           last.map(UniqueHashable.init(wrapped:))
         )
@@ -38,13 +38,13 @@ where
     }
   }
 
-  public var deletion: [Value.Element] {
+  var deletion: [Value.Element] {
     if current.isEmpty {
-      return .init(last)
+      .init(last)
     } else if last.isEmpty {
-      return .init([])
+      .init([])
     } else {
-      return last.map(UniqueHashable.init(wrapped:))
+      last.map(UniqueHashable.init(wrapped:))
         .subtracting(
           current.map(UniqueHashable.init(wrapped:))
         )

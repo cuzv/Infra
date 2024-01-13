@@ -7,8 +7,8 @@ public extension FileManager {
   }
 }
 
-extension FileManager {
-  public enum ListFileType {
+public extension FileManager {
+  enum ListFileType {
     case visible
     case regularFile
     case directory
@@ -16,29 +16,29 @@ extension FileManager {
     var keys: [URLResourceKey] {
       switch self {
       case .visible:
-        return []
+        []
       case .regularFile:
-        return [.isRegularFileKey]
+        [.isRegularFileKey]
       case .directory:
-        return [.isDirectoryKey]
+        [.isDirectoryKey]
       }
     }
 
     var isIncluded: (URL) -> Bool {
-      return { url -> Bool in
+      { url -> Bool in
         switch self {
         case .visible:
-          return true
+          true
         case .regularFile:
-          return !((try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? true)
+          !((try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? true)
         case .directory:
-          return (try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+          (try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
         }
       }
     }
   }
 
-  public func list(
+  func list(
     at url: URL,
     fileType: ListFileType = .visible,
     skipsSubdirectoryDescendants: Bool = true
@@ -59,7 +59,7 @@ extension FileManager {
       options: options
     ) {
       return Array(
-        enumerator.lazy.compactMap({ $0 as? URL })
+        enumerator.lazy.compactMap { $0 as? URL }
           .filter(fileType.isIncluded)
       )
     } else {
@@ -69,8 +69,7 @@ extension FileManager {
 }
 
 /// Copied from https://github.com/wvdk/FileManagerCopyAllChildren/blob/main/Sources/FileManagerCopyAllChildren/FileManager%2BcopyAllChildren.swift
-extension FileManager {
-
+public extension FileManager {
   /// A method which copies all files and subdirectories from a given orgin into a given target directory.
   ///
   /// The origin must be a local directory which contain at least one file or subdirectory. The target directory will be created if it does not already exist. This method can also delete the origin directory (and all it's children) when finished copying. You can specify if hidden files should be ignored or included in the copy.
@@ -82,7 +81,7 @@ extension FileManager {
   ///   - ignoreHiddenFiles: Pass `true ` to ignore any hidden files in the origin directory and only copy the non-hidden files and directories.
   ///
   /// - Throws: Can throw a `FileManagerCopyAllChildrenError` if something goes wrong or is impossible.
-  public func copyEntireFolder(
+  func copyEntireFolder(
     from origin: URL,
     to target: URL,
     deleteOriginWhenDone shouldDeleteOrigin: Bool = false,
@@ -166,8 +165,7 @@ extension FileManager {
   }
 
   /// An `Error` returned by the `copyAllChildren(from:to:)` method to indicate that something went wrong or was not possible.
-  public enum CopyEntireFolderError: Error {
-
+  enum CopyEntireFolderError: Error {
     /// The URL provided for the origin directory does not point to a valid file.
     case originDoesNotExist
 

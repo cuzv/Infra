@@ -42,14 +42,14 @@ public actor TimeoutTask<Success> {
     seconds: TimeInterval,
     operation: @escaping @Sendable () async throws -> Success
   ) {
-    self.nanoseconds = UInt64(seconds * 1_000_000_000)
+    nanoseconds = UInt64(seconds * 1_000_000_000)
     self.operation = operation
   }
 }
 
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, macCatalyst 15.0, *)
-extension TimeoutTask {
-  public struct TimeoutError: LocalizedError {
+public extension TimeoutTask {
+  struct TimeoutError: LocalizedError {
     public var errorDescription: String? {
       "The operation timed out."
     }

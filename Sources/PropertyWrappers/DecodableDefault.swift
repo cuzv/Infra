@@ -10,9 +10,9 @@ public protocol DecodableDefaultSource {
 
 public enum DecodableDefault {}
 
-extension DecodableDefault {
+public extension DecodableDefault {
   @propertyWrapper
-  public struct Wrapper<Source: DecodableDefaultSource> {
+  struct Wrapper<Source: DecodableDefaultSource> {
     public var wrappedValue: Source.Value
 
     public init(wrappedValue: Source.Value) {
@@ -43,8 +43,8 @@ extension DecodableDefault.Wrapper: Decodable {
   }
 }
 
-extension KeyedDecodingContainer {
-  public func decode<Source>(
+public extension KeyedDecodingContainer {
+  func decode<Source>(
     _ type: DecodableDefault.Wrapper<Source>.Type,
     forKey key: Key
   ) throws -> DecodableDefault.Wrapper<Source> {
@@ -64,12 +64,12 @@ extension DecodableDefault.Wrapper: Encodable where Source.Value: Encodable {
 
 // MARK: -
 
-extension DecodableDefault {
-  public typealias Source = DecodableDefaultSource
-  public typealias List = Decodable & ExpressibleByArrayLiteral
-  public typealias Map = Decodable & ExpressibleByDictionaryLiteral
+public extension DecodableDefault {
+  typealias Source = DecodableDefaultSource
+  typealias List = Decodable & ExpressibleByArrayLiteral
+  typealias Map = Decodable & ExpressibleByDictionaryLiteral
 
-  public enum Sources {
+  enum Sources {
     public enum True: Source {
       public static var defaultValue: Bool { true }
     }
@@ -116,18 +116,18 @@ extension URL: DecodableDefaultSource {
   public static let defaultValue: Self = URL(string: "https://httpbin.org/")!
 }
 
-extension DecodableDefault {
-  public typealias True = Wrapper<Sources.True>
-  public typealias False = Wrapper<Sources.False>
-  public typealias Arr<T: List> = Wrapper<Sources.EmptyList<T>>
-  public typealias Dic<T: Map> = Wrapper<Sources.EmptyMap<T>>
-  public typealias Str = Wrapper<String>
-  public typealias Integer = Wrapper<Int>
-  public typealias Integer64 = Wrapper<Int64>
-  public typealias Dbl = Wrapper<Double>
-  public typealias Flt = Wrapper<Float>
-  public typealias Url = Wrapper<URL>
-  public typealias Timestamp = Wrapper<Sources.Timestamp>
+public extension DecodableDefault {
+  typealias True = Wrapper<Sources.True>
+  typealias False = Wrapper<Sources.False>
+  typealias Arr<T: List> = Wrapper<Sources.EmptyList<T>>
+  typealias Dic<T: Map> = Wrapper<Sources.EmptyMap<T>>
+  typealias Str = Wrapper<String>
+  typealias Integer = Wrapper<Int>
+  typealias Integer64 = Wrapper<Int64>
+  typealias Dbl = Wrapper<Double>
+  typealias Flt = Wrapper<Float>
+  typealias Url = Wrapper<URL>
+  typealias Timestamp = Wrapper<Sources.Timestamp>
 }
 
 // MARK: -

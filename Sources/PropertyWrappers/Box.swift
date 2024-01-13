@@ -30,8 +30,8 @@ public struct Ref<Value> {
     dynamicMember keyPath: WritableKeyPath<Value, Result>
   ) -> Ref<Result> {
     .init(
-      read: { self.wrappedValue[keyPath: keyPath] },
-      write: { self.wrappedValue[keyPath: keyPath] = $0 }
+      read: { wrappedValue[keyPath: keyPath] },
+      write: { wrappedValue[keyPath: keyPath] = $0 }
     )
   }
 }

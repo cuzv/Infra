@@ -56,7 +56,8 @@ public extension Task {
     priority: TaskPriority? = nil,
     operation: @escaping () async throws -> Void
   ) -> Self
-  where Success == Void, Failure == Never {
+    where Success == Void, Failure == Never
+  {
     .init(priority: priority) {
       do {
         try await operation()
@@ -71,7 +72,8 @@ public extension Task {
     priority: TaskPriority? = nil,
     operation: @escaping () async throws -> Success
   ) -> Self
-  where Failure == any Error {
+    where Failure == any Error
+  {
     .init(priority: priority) {
       do {
         return try await operation()

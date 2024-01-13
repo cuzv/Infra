@@ -1,6 +1,6 @@
 #if !(os(iOS) && (arch(i386) || arch(arm)))
-import Foundation
 import Combine
+import Foundation
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
 public protocol BindingProvider {
@@ -8,12 +8,12 @@ public protocol BindingProvider {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension BindingProvider where Self: AnyObject {
-  public func store(_ subscription: AnyCancellable) {
+public extension BindingProvider where Self: AnyObject {
+  func store(_ subscription: AnyCancellable) {
     subscription.store(in: &subscriptions)
   }
 
-  public var subscriptions: Set<AnyCancellable> {
+  var subscriptions: Set<AnyCancellable> {
     _read { yield subscriptionsBox.wrappedValue }
     set { subscriptionsBox.wrappedValue = newValue }
     _modify { yield &subscriptionsBox.wrappedValue }

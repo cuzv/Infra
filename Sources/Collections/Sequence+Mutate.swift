@@ -1,6 +1,6 @@
-extension Sequence {
+public extension Sequence {
   @inline(__always)
-  public func mutate(
+  func mutate(
     _ mutation: @escaping (inout Element) -> Void
   ) -> [Element] {
     map { output in
@@ -11,11 +11,11 @@ extension Sequence {
   }
 }
 
-extension LazySequence {
+public extension LazySequence {
   @inline(__always)
-  public func mutate(
+  func mutate(
     _ mutation: @escaping (inout Element) -> Void
-  ) ->  LazyMapSequence<Elements, Element> {
+  ) -> LazyMapSequence<Elements, Element> {
     map { output in
       var result = output
       mutation(&result)

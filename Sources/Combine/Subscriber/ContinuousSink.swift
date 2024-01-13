@@ -1,10 +1,10 @@
 #if !(os(iOS) && (arch(i386) || arch(arm)))
-import Foundation
 import Combine
+import Foundation
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Subscribers {
-  public final class ContinuousSink<Input, Failure: Error>: Subscriber, Cancellable, CustomStringConvertible, CustomReflectable, CustomPlaygroundDisplayConvertible {
+public extension Subscribers {
+  final class ContinuousSink<Input, Failure: Error>: Subscriber, Cancellable, CustomStringConvertible, CustomReflectable, CustomPlaygroundDisplayConvertible {
     typealias SubscriptionStatus = CombineExtensions.SubscriptionStatus
 
     public let receiveValue: (Input) -> Void
@@ -53,8 +53,8 @@ extension Subscribers {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher {
-  public func continuousSink(
+public extension Publisher {
+  func continuousSink(
     receiveCompletion: @escaping (Subscribers.Completion<Failure>) -> Void,
     receiveValue: @escaping ((Output) -> Void)
   ) -> AnyCancellable {
@@ -68,8 +68,8 @@ extension Publisher {
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher where Failure == Never {
-  public func continuousSink(
+public extension Publisher where Failure == Never {
+  func continuousSink(
     receiveValue: @escaping (Output) -> Void
   ) -> AnyCancellable {
     let subscriber = Subscribers.ContinuousSink<Output, Failure>(

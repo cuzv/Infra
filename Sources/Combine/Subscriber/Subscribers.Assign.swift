@@ -2,8 +2,8 @@
 import Combine
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
-extension Publisher where Failure == Never {
-  public func assign(
+public extension Publisher where Failure == Never {
+  func assign(
     to subjects: CurrentValueSubject<Output, Failure>...
   ) -> AnyCancellable {
     sink { value in
@@ -13,7 +13,7 @@ extension Publisher where Failure == Never {
     }
   }
 
-  public func assign(
+  func assign(
     to subjects: CurrentValueSubject<Output?, Failure>...
   ) -> AnyCancellable {
     sink { value in
@@ -23,14 +23,14 @@ extension Publisher where Failure == Never {
     }
   }
 
-  public func assign<Root>(
+  func assign<Root>(
     to keyPath: ReferenceWritableKeyPath<Root, Output?>,
     on object: Root
   ) -> AnyCancellable {
     map(Optional.init).assign(to: keyPath, on: object)
   }
 
-  public func assignWeak<Root>(
+  func assignWeak<Root>(
     to keyPath: ReferenceWritableKeyPath<Root, Output>,
     on object: Root?
   ) -> AnyCancellable where Root: AnyObject {
@@ -39,7 +39,7 @@ extension Publisher where Failure == Never {
     }
   }
 
-  public func assignWeak<Root>(
+  func assignWeak<Root>(
     to keyPath: ReferenceWritableKeyPath<Root, Output?>,
     on object: Root?
   ) -> AnyCancellable where Root: AnyObject {

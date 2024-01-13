@@ -5,7 +5,7 @@ public enum Either<Left, Right> {
   case right(Right)
 
   public static func isLeft(_ item: Either<Left, Right>) -> Bool {
-    return !isRight(item)
+    !isRight(item)
   }
 
   public static func isRight(_ item: Either<Left, Right>) -> Bool {
@@ -15,15 +15,15 @@ public enum Either<Left, Right> {
 
   public var left: Left? {
     switch self {
-    case let .left(value): return value
-    default: return nil
+    case let .left(value): value
+    default: nil
     }
   }
 
   public var right: Right? {
     switch self {
-    case let .right(value): return value
-    default: return nil
+    case let .right(value): value
+    default: nil
     }
   }
 
@@ -31,8 +31,8 @@ public enum Either<Left, Right> {
     _ f: (Right) -> NewRight
   ) -> Either<Left, NewRight> {
     switch self {
-    case let .right(value): return .right(f(value))
-    case let .left(value):  return .left(value)
+    case let .right(value): .right(f(value))
+    case let .left(value): .left(value)
     }
   }
 
@@ -40,8 +40,8 @@ public enum Either<Left, Right> {
     _ f: (Right) -> Either<Left, NewRight>
   ) -> Either<Left, NewRight> {
     switch self {
-    case let .right(value): return f(value)
-    case let .left(value): return .left(value)
+    case let .right(value): f(value)
+    case let .left(value): .left(value)
     }
   }
 }

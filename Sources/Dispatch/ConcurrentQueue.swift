@@ -1,5 +1,5 @@
-import Foundation
 import Dispatch
+import Foundation
 
 /// See http://khanlou.com/2016/04/the-GCD-handbook/
 public final class ConcurrentQueue {

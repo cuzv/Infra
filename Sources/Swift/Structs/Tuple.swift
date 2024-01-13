@@ -77,7 +77,7 @@ extension Tuple3: Codable where Left: Codable, Center: Codable, Right: Codable {
 }
 
 extension Tuple3: Equatable
-where
+  where
   Left: Equatable,
   Center: Equatable,
   Right: Equatable

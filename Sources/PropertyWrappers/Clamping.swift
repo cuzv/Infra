@@ -1,4 +1,4 @@
-///https://nshipster.com/propertywrapper/#constraining-values
+/// https://nshipster.com/propertywrapper/#constraining-values
 @propertyWrapper
 public struct Clamping<Value: Comparable> {
   private var value: Value

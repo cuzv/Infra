@@ -9,13 +9,13 @@ public extension Date {
     let seconds: TimeInterval
     switch component {
     case .year:
-      seconds = 60*60*24*365
+      seconds = 60 * 60 * 24 * 365
     case .month:
-      seconds = 60*60*24*30
+      seconds = 60 * 60 * 24 * 30
     case .day:
-      seconds = 60*60*24
+      seconds = 60 * 60 * 24
     case .hour:
-      seconds = 60*60
+      seconds = 60 * 60
     case .minute:
       seconds = 60
     case .second:

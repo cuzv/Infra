@@ -1,11 +1,11 @@
-import Foundation
 import Dispatch
+import Foundation
 
-extension ConcurrentPriorityQueue {
-  public typealias AsyncTask = (@escaping () -> Void) -> Void
-  public typealias SyncTask = () -> Void
+public extension ConcurrentPriorityQueue {
+  typealias AsyncTask = (@escaping () -> Void) -> Void
+  typealias SyncTask = () -> Void
 
-  public final class TaskItem: Hashable {
+  final class TaskItem: Hashable {
     let action: AsyncTask
     let id: String
     fileprivate(set) var priority: Int
@@ -29,7 +29,7 @@ extension ConcurrentPriorityQueue {
     }
 
     public static func == (lhs: TaskItem, rhs: TaskItem) -> Bool {
-      return lhs.hashValue == rhs.hashValue
+      lhs.hashValue == rhs.hashValue
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -102,10 +102,10 @@ public final class ConcurrentPriorityQueue {
             result.append(contentsOf: candidates)
 
             priprityToTasks[priority]?.remove(candidates)
-            candidates.forEach({ idToTask[$0.id] = nil })
+            candidates.forEach { idToTask[$0.id] = nil }
 
             semaphore -= candidates.count
-            if 0 == semaphore {
+            if semaphore == 0 {
               break
             }
           }

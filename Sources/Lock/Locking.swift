@@ -13,23 +13,23 @@ public protocol Locking {
 }
 
 /// Copied from RxSwift.
-extension Locking {
+public extension Locking {
   @inline(__always)
-  public func performLocked(_ action: () -> Void) {
+  func performLocked(_ action: () -> Void) {
     lock()
     defer { unlock() }
     action()
   }
 
   @inline(__always)
-  public func calculateLocked<T>(_ action: () -> T) -> T {
+  func calculateLocked<T>(_ action: () -> T) -> T {
     lock()
     defer { unlock() }
     return action()
   }
 
   @inline(__always)
-  public func calculateLockedOrFail<T>(_ action: () throws -> T) throws -> T {
+  func calculateLockedOrFail<T>(_ action: () throws -> T) throws -> T {
     lock()
     defer { unlock() }
     let result = try action()
@@ -51,23 +51,23 @@ public protocol ReadWriteLocking {
   func unlock()
 }
 
-extension ReadWriteLocking {
+public extension ReadWriteLocking {
   @inline(__always)
-  public func performLockedWrite(_ action: () -> Void) {
+  func performLockedWrite(_ action: () -> Void) {
     writeLock()
     defer { unlock() }
     action()
   }
 
   @inline(__always)
-  public func calculateLockedRead<T>(_ action: () -> T) -> T {
+  func calculateLockedRead<T>(_ action: () -> T) -> T {
     readLock()
     defer { unlock() }
     return action()
   }
 
   @inline(__always)
-  public func calculateLockedReadOrFail<T>(_ action: () throws -> T) throws -> T {
+  func calculateLockedReadOrFail<T>(_ action: () throws -> T) throws -> T {
     readLock()
     defer { unlock() }
     let result = try action()

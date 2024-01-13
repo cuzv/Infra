@@ -1,12 +1,12 @@
 import Foundation
 
 @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, macCatalyst 15.0, *)
-extension Task where Failure == Error {
+public extension Task where Failure == Error {
   /// Automatically retrying an asynchronous Swift Task
   ///
   /// Copied from https://www.swiftbysundell.com/articles/retrying-an-async-swift-task/
   @discardableResult
-  public init(
+  init(
     priority: TaskPriority? = nil,
     maxRetryCount: Int,
     retryDelay: TimeInterval = 1,
