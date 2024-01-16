@@ -1,8 +1,9 @@
 import Foundation
 
 public extension NSError {
-  static let unknown = NSError.from("Unknown error")
-  static func from(_ desc: String) -> NSError {
-    NSError(domain: "ShitHappend", code: -1, userInfo: [NSLocalizedDescriptionKey: desc])
+  static let unknown = NSError.from(desc: "Unknown error")
+  
+  static func from(domain: String = "com.redrainlab.default", code: Int = -1, desc: String) -> NSError {
+    NSError(domain: domain, code: -1, userInfo: [NSLocalizedDescriptionKey: desc])
   }
 }
