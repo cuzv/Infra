@@ -1,7 +1,7 @@
 load("@build_bazel_rules_ios//rules:framework.bzl", "apple_framework")
 
 apple_framework(
-    name = "Infrastructure",
+    name = "Infra",
     srcs = glob([
         "Sources/**/*.swift",
     ]),

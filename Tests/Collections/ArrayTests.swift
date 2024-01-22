@@ -1,5 +1,5 @@
 import Foundation
-@testable import Infrastructure
+@testable import Infra
 import XCTest
 
 class ArrayTests: XCTestCase {

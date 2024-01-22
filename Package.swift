@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "Infrastructure",
+  name: "Infra",
   platforms: [
     .iOS(.v12),
     .macOS(.v10_13),
@@ -13,20 +13,20 @@ let package = Package(
   ],
   products: [
     .library(
-      name: "Infrastructure",
-      targets: ["Infrastructure"]
+      name: "Infra",
+      targets: ["Infra"]
     ),
   ],
   dependencies: [
   ],
   targets: [
     .target(
-      name: "Infrastructure",
+      name: "Infra",
       path: "Sources"
     ),
     .testTarget(
-      name: "InfrastructureTests",
-      dependencies: ["Infrastructure"],
+      name: "InfraTests",
+      dependencies: ["Infra"],
       path: "Tests"
     ),
   ],
