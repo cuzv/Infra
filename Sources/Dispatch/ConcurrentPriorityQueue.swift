@@ -182,8 +182,8 @@ public final class ConcurrentPriorityQueue {
     func execute() {
       if let candidates = priprityToTasks[from] {
         priprityToTasks[from] = nil
-        candidates.forEach {
-          $0.priority = to
+        for candidate in candidates {
+          candidate.priority = to
         }
 
         var tasks = priprityToTasks[to] ?? OrderedSet()

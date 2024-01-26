@@ -174,7 +174,7 @@ public struct OrderedSet<T: Hashable> {
   @discardableResult
   public mutating func remove<S: Sequence>(_ objects: S) -> [Index]? where S.Iterator.Element == T {
     var indexes = [Index]()
-    objects.forEach { object in
+    for object in objects {
       if let index = index(of: object) {
         indexes.append(index)
       }

@@ -133,6 +133,7 @@ extension UIRectEdge: Chaining {}
 
 #if canImport(UIKit)
 import UIKit
+
 @available(iOS 15.0, *)
 extension UIButton.Configuration: Chaining {}
 #endif

@@ -28,6 +28,7 @@ public extension NSMutableAttributedString {
 
 #if canImport(UIKit)
 import UIKit
+
 public extension NSAttributedString {
   func layoutSize(withConstrainedWidth width: CGFloat) -> CGSize {
     let size = CGSize(width: width, height: .greatestFiniteMagnitude)

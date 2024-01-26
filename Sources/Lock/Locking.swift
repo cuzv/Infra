@@ -38,9 +38,11 @@ public extension Locking {
 }
 
 import class Foundation.NSLock
+
 extension NSLock: Locking {}
 
 import class Foundation.NSRecursiveLock
+
 extension NSRecursiveLock: Locking {}
 
 // MARK: -

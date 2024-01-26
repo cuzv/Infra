@@ -7,8 +7,8 @@ public extension Publisher where Failure == Never {
     to subjects: CurrentValueSubject<Output, Failure>...
   ) -> AnyCancellable {
     sink { value in
-      subjects.forEach {
-        $0.send(value)
+      for subject in subjects {
+        subject.send(value)
       }
     }
   }
@@ -17,8 +17,8 @@ public extension Publisher where Failure == Never {
     to subjects: CurrentValueSubject<Output?, Failure>...
   ) -> AnyCancellable {
     sink { value in
-      subjects.forEach {
-        $0.send(value)
+      for subject in subjects {
+        subject.send(value)
       }
     }
   }

@@ -27,4 +27,5 @@ public struct Extnsion<Base> {
 }
 
 import Foundation.NSObject
+
 extension NSObject: ExtensionsProvider {}

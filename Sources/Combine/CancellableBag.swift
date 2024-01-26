@@ -8,8 +8,8 @@ public final class CancellableBag {
   public init() {}
 
   public func cancel() {
-    subscriptions.forEach {
-      $0.cancel()
+    for subscription in subscriptions {
+      subscription.cancel()
     }
     subscriptions = []
   }
