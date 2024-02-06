@@ -6,8 +6,8 @@ apple_framework(
         "Sources/**/*.swift",
     ]),
     platforms = {
-        "ios": "13.0",
-        "macos": "11.0",
+        "ios": "12.0",
+        "macos": "10.13",
     },
     swift_version = "5.9",
     visibility = [
