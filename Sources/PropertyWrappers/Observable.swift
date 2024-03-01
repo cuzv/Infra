@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Use Observed instead")
 @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Use Observed instead")

@@ -27,6 +27,19 @@ public extension Dictionary {
   func has(key: Key) -> Bool {
     index(forKey: key) != nil
   }
+
+  @inline(__always)
+  var trimmed: Self {
+    .init(uniqueKeysWithValues: compactMap { key, value -> Element? in
+      if let value = value as? String, value.isEmpty {
+        return nil
+      }
+      if let value = value as? Data, value.isEmpty {
+        return nil
+      }
+      return (key, value)
+    })
+  }
 }
 
 public extension Dictionary {
