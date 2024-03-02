@@ -61,4 +61,13 @@ public extension Swift.Result where Failure == AnyError {
       self = .failure(AnyError(error))
     }
   }
+
+  @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
+  init(attempt body: () async throws -> Success) async {
+    do {
+      self = try await .success(body())
+    } catch {
+      self = .failure(AnyError(error))
+    }
+  }
 }
