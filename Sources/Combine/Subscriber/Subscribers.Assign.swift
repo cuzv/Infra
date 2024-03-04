@@ -13,10 +13,34 @@ public extension Publisher where Failure == Never {
     }
   }
 
+  func assign<S>(
+    to subjects: CurrentValueSubject<Output, Failure>...,
+    on scheduler: S,
+    options: S.SchedulerOptions? = nil
+  ) -> AnyCancellable where S : Scheduler {
+    receive(on: scheduler, options: options).sink { value in
+      for subject in subjects {
+        subject.send(value)
+      }
+    }
+  }
+
   func assign(
     to subjects: CurrentValueSubject<Output?, Failure>...
   ) -> AnyCancellable {
     sink { value in
+      for subject in subjects {
+        subject.send(value)
+      }
+    }
+  }
+
+  func assign<S>(
+    to subjects: CurrentValueSubject<Output?, Failure>...,
+    on scheduler: S,
+    options: S.SchedulerOptions? = nil
+  ) -> AnyCancellable where S : Scheduler {
+    receive(on: scheduler, options: options).sink { value in
       for subject in subjects {
         subject.send(value)
       }
@@ -30,6 +54,16 @@ public extension Publisher where Failure == Never {
     map(Optional.init).assign(to: keyPath, on: object)
   }
 
+  func assign<Root, S>(
+    to keyPath: ReferenceWritableKeyPath<Root, Output?>,
+    on object: Root,
+    on scheduler: S,
+    options: S.SchedulerOptions? = nil
+  ) -> AnyCancellable where S : Scheduler {
+    receive(on: scheduler, options: options)
+      .assign(to: keyPath, on: object)
+  }
+
   func assignWeak<Root>(
     to keyPath: ReferenceWritableKeyPath<Root, Output>,
     on object: Root?
@@ -39,11 +73,31 @@ public extension Publisher where Failure == Never {
     }
   }
 
+  func assignWeak<Root, S>(
+    to keyPath: ReferenceWritableKeyPath<Root, Output>,
+    on object: Root?,
+    on scheduler: S,
+    options: S.SchedulerOptions? = nil
+  ) -> AnyCancellable where Root: AnyObject, S : Scheduler {
+    receive(on: scheduler, options: options)
+      .assignWeak(to: keyPath, on: object)
+  }
+
   func assignWeak<Root>(
     to keyPath: ReferenceWritableKeyPath<Root, Output?>,
     on object: Root?
   ) -> AnyCancellable where Root: AnyObject {
     map(Optional.init).assignWeak(to: keyPath, on: object)
+  }
+
+  func assignWeak<Root, S>(
+    to keyPath: ReferenceWritableKeyPath<Root, Output?>,
+    on object: Root?,
+    on scheduler: S,
+    options: S.SchedulerOptions? = nil
+  ) -> AnyCancellable where Root: AnyObject, S : Scheduler {
+    receive(on: scheduler, options: options)
+      .assignWeak(to: keyPath, on: object)
   }
 }
 #endif

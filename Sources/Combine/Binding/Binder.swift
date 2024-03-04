@@ -6,23 +6,32 @@ import Foundation
 public extension Subscribers {
   final class Binder<Target: BindingProvider & AnyObject, Input> {
     private(set) weak var target: Target?
+    private let receiveOnMainQueue: Bool
     private let receiveCompletion: (Target, Completion<Never>) -> Void
     private let receiveValue: (Target, Input) -> Void
     private var subscription: Subscription?
 
     public init(
       target: Target,
+      receiveOnMainQueue: Bool = false,
       receiveCompletion: @escaping (Target, Completion<Never>) -> Void = { _, _ in },
       receiveValue: @escaping (Target, Input) -> Void
     ) {
       self.target = target
+      self.receiveOnMainQueue = receiveOnMainQueue
       self.receiveCompletion = receiveCompletion
       self.receiveValue = receiveValue
     }
 
-    private func withTarget(_ body: (Target) -> Void) {
+    private func withTarget(_ body: @escaping (Target) -> Void) {
       if let target {
-        body(target)
+        if receiveOnMainQueue {
+          DispatchQueue.main.safeAsync {
+            body(target)
+          }
+        } else {
+          body(target)
+        }
       } else {
         cancel()
       }
@@ -71,12 +80,12 @@ extension Subscribers.Binder: Subscriber {
   }
 
   public func receive(_ input: Input) -> Subscribers.Demand {
-    withTarget { receiveValue($0, input) }
+    withTarget { self.receiveValue($0, input) }
     return .max(1)
   }
 
   public func receive(completion: Subscribers.Completion<Never>) {
-    withTarget { receiveCompletion($0, completion) }
+    withTarget { self.receiveCompletion($0, completion) }
   }
 }
 
