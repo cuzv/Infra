@@ -92,4 +92,18 @@ public extension Combine where Base: AnyObject & BindingProvider {
   }
 }
 
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
+public extension Combine where Base: AnyObject & BindingProvider {
+  subscript<Element>(safe keyPath: ReferenceWritableKeyPath<Base, Element>) -> Binder<Element> {
+    .init(target: base, receiveOnMainQueue: true) { base, value in
+      base[keyPath: keyPath] = value
+    }
+  }
+
+  subscript<Element>(safe keyPath: ReferenceWritableKeyPath<Base, Element?>) -> Binder<Element?> {
+    .init(target: base, receiveOnMainQueue: true) { base, value in
+      base[keyPath: keyPath] = value
+    }
+  }
+}
 #endif
