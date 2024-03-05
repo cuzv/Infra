@@ -13,6 +13,16 @@ public extension Publisher where Failure == Never {
     }
   }
 
+  func assignSafely(
+    to subjects: CurrentValueSubject<Output, Failure>...
+  ) -> AnyCancellable {
+    receive(on: DispatchQueue.main).sink { value in
+      for subject in subjects {
+        subject.send(value)
+      }
+    }
+  }
+
   func assign<S>(
     to subjects: CurrentValueSubject<Output, Failure>...,
     on scheduler: S,
@@ -29,6 +39,16 @@ public extension Publisher where Failure == Never {
     to subjects: CurrentValueSubject<Output?, Failure>...
   ) -> AnyCancellable {
     sink { value in
+      for subject in subjects {
+        subject.send(value)
+      }
+    }
+  }
+
+  func assignSafely(
+    to subjects: CurrentValueSubject<Output?, Failure>...
+  ) -> AnyCancellable {
+    receive(on: DispatchQueue.main).sink { value in
       for subject in subjects {
         subject.send(value)
       }
@@ -54,6 +74,13 @@ public extension Publisher where Failure == Never {
     map(Optional.init).assign(to: keyPath, on: object)
   }
 
+  func assignSafely<Root>(
+    to keyPath: ReferenceWritableKeyPath<Root, Output?>,
+    on object: Root
+  ) -> AnyCancellable {
+    assign(to: keyPath, on: object, on: DispatchQueue.main)
+  }
+
   func assign<Root, S>(
     to keyPath: ReferenceWritableKeyPath<Root, Output?>,
     on object: Root,
@@ -73,6 +100,13 @@ public extension Publisher where Failure == Never {
     }
   }
 
+  func assignWeakSafely<Root>(
+    to keyPath: ReferenceWritableKeyPath<Root, Output>,
+    on object: Root?
+  ) -> AnyCancellable where Root: AnyObject {
+    assignWeak(to: keyPath, on: object, on: DispatchQueue.main)
+  }
+
   func assignWeak<Root, S>(
     to keyPath: ReferenceWritableKeyPath<Root, Output>,
     on object: Root?,
@@ -88,6 +122,13 @@ public extension Publisher where Failure == Never {
     on object: Root?
   ) -> AnyCancellable where Root: AnyObject {
     map(Optional.init).assignWeak(to: keyPath, on: object)
+  }
+
+  func assignWeakSafely<Root>(
+    to keyPath: ReferenceWritableKeyPath<Root, Output?>,
+    on object: Root?
+  ) -> AnyCancellable where Root: AnyObject {
+    assignWeak(to: keyPath, on: object, on: DispatchQueue.main)
   }
 
   func assignWeak<Root, S>(
