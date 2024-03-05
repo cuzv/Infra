@@ -9,13 +9,13 @@ public extension FileManager {
 
 public extension FileManager {
   enum ListFileType {
-    case visible
+    case raw
     case regularFile
     case directory
 
     var keys: [URLResourceKey] {
       switch self {
-      case .visible:
+      case .raw:
         []
       case .regularFile:
         [.isRegularFileKey]
@@ -27,7 +27,7 @@ public extension FileManager {
     var isIncluded: (URL) -> Bool {
       { url -> Bool in
         switch self {
-        case .visible:
+        case .raw:
           true
         case .regularFile:
           !((try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? true)
@@ -40,36 +40,97 @@ public extension FileManager {
 
   func list(
     at url: URL,
-    fileType: ListFileType = .visible,
-    skipsSubdirectoryDescendants: Bool = true
+    fileType: ListFileType = .raw,
+    options: FileManager.DirectoryEnumerationOptions = []
   ) -> [URL] {
-    let keys: [URLResourceKey] = [.isRegularFileKey]
-
-    var options: FileManager.DirectoryEnumerationOptions = [
-      .skipsHiddenFiles,
-      .skipsPackageDescendants,
-    ]
-    if skipsSubdirectoryDescendants {
-      options.insert(.skipsSubdirectoryDescendants)
-    }
-
     if let enumerator = enumerator(
       at: url,
-      includingPropertiesForKeys: keys,
+      includingPropertiesForKeys: [.isRegularFileKey],
       options: options
     ) {
-      return Array(
+      Array(
         enumerator.lazy.compactMap { $0 as? URL }
           .filter(fileType.isIncluded)
       )
     } else {
-      return []
+      []
     }
   }
 }
 
+public extension FileManager.DirectoryEnumerationOptions {
+  static let common: Self = [
+    .skipsHiddenFiles,
+    .skipsPackageDescendants,
+  ]
+}
+
 /// Copied from https://github.com/wvdk/FileManagerCopyAllChildren/blob/main/Sources/FileManagerCopyAllChildren/FileManager%2BcopyAllChildren.swift
 public extension FileManager {
+  func sizeOfEntireFolder(
+    at target: URL,
+    ignoreHiddenFiles shouldIgnoreHiddenFiles: Bool = false
+  ) throws -> Int64 {
+    let contents = list(
+      at: target,
+      fileType: .raw,
+      options: shouldIgnoreHiddenFiles ? [.skipsHiddenFiles] : []
+    )
+
+    var total = Int64(0)
+    for itemURL in contents {
+      if 
+        let attr = try? attributesOfItem(atPath: itemURL.path),
+        let size = attr[FileAttributeKey.size] as? NSNumber {
+        total += size.int64Value
+      }
+    }
+
+    return total
+  }
+
+  func deleteEntireFolder(
+    at target: URL,
+    ignoreHiddenFiles shouldIgnoreHiddenFiles: Bool = false
+  ) throws {
+    let contents = try contentsOfEntireFolder(
+      at: target,
+      ignoreHiddenFiles: shouldIgnoreHiddenFiles
+    )
+    for itemURL in contents {
+      if fileExists(atPath: itemURL.path) {
+        try removeItem(at: itemURL)
+      }
+    }
+  }
+
+  private func contentsOfEntireFolder(
+    at target: URL,
+    ignoreHiddenFiles shouldIgnoreHiddenFiles: Bool = false
+  ) throws -> [URL] {
+    // Check that the target is a directory and not empty.
+    var isDirectory: ObjCBool = false
+    guard fileExists(atPath: target.path, isDirectory: &isDirectory) else {
+      throw ReadEntireFolderError.targetDoesNotExist
+    }
+    guard isDirectory.boolValue else {
+      throw ReadEntireFolderError.targetIsNotADirectory
+    }
+
+    let contents = try contentsOfDirectory(
+      at: target,
+      includingPropertiesForKeys: nil,
+      options: shouldIgnoreHiddenFiles ? [.skipsHiddenFiles] : []
+    )
+
+    return contents
+  }
+
+  enum ReadEntireFolderError: Error {
+    case targetDoesNotExist
+    case targetIsNotADirectory
+  }
+
   /// A method which copies all files and subdirectories from a given orgin into a given target directory.
   ///
   /// The origin must be a local directory which contain at least one file or subdirectory. The target directory will be created if it does not already exist. This method can also delete the origin directory (and all it's children) when finished copying. You can specify if hidden files should be ignored or included in the copy.
