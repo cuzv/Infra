@@ -28,5 +28,12 @@ public extension Publisher {
       successor
     }
   }
+
+  @inline(__always)
+  func compactMap<E>(
+    _ type: E.Type
+  ) -> Publishers.CompactMap<Self, E> {
+    compactMap { $0 as? E }
+  }
 }
 #endif
