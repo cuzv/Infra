@@ -79,9 +79,10 @@ public extension FileManager {
 
     var total = Int64(0)
     for itemURL in contents {
-      if 
+      if
         let attr = try? attributesOfItem(atPath: itemURL.path),
-        let size = attr[FileAttributeKey.size] as? NSNumber {
+        let size = attr[FileAttributeKey.size] as? NSNumber
+      {
         total += size.int64Value
       }
     }

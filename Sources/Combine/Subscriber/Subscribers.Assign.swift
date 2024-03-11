@@ -27,7 +27,7 @@ public extension Publisher where Failure == Never {
     to subjects: CurrentValueSubject<Output, Failure>...,
     on scheduler: S,
     options: S.SchedulerOptions? = nil
-  ) -> AnyCancellable where S : Scheduler {
+  ) -> AnyCancellable where S: Scheduler {
     receive(on: scheduler, options: options).sink { value in
       for subject in subjects {
         subject.send(value)
@@ -59,7 +59,7 @@ public extension Publisher where Failure == Never {
     to subjects: CurrentValueSubject<Output?, Failure>...,
     on scheduler: S,
     options: S.SchedulerOptions? = nil
-  ) -> AnyCancellable where S : Scheduler {
+  ) -> AnyCancellable where S: Scheduler {
     receive(on: scheduler, options: options).sink { value in
       for subject in subjects {
         subject.send(value)
@@ -86,7 +86,7 @@ public extension Publisher where Failure == Never {
     on object: Root,
     on scheduler: S,
     options: S.SchedulerOptions? = nil
-  ) -> AnyCancellable where S : Scheduler {
+  ) -> AnyCancellable where S: Scheduler {
     receive(on: scheduler, options: options)
       .assign(to: keyPath, on: object)
   }
@@ -112,7 +112,7 @@ public extension Publisher where Failure == Never {
     on object: Root?,
     on scheduler: S,
     options: S.SchedulerOptions? = nil
-  ) -> AnyCancellable where Root: AnyObject, S : Scheduler {
+  ) -> AnyCancellable where Root: AnyObject, S: Scheduler {
     receive(on: scheduler, options: options)
       .assignWeak(to: keyPath, on: object)
   }
@@ -136,7 +136,7 @@ public extension Publisher where Failure == Never {
     on object: Root?,
     on scheduler: S,
     options: S.SchedulerOptions? = nil
-  ) -> AnyCancellable where Root: AnyObject, S : Scheduler {
+  ) -> AnyCancellable where Root: AnyObject, S: Scheduler {
     receive(on: scheduler, options: options)
       .assignWeak(to: keyPath, on: object)
   }
