@@ -1,3 +1,4 @@
+#if !(os(iOS) && (arch(i386) || arch(arm)))
 import Combine
 import Foundation
 
@@ -86,3 +87,4 @@ private extension CountDownTimer {
     }
   }
 }
+#endif
