@@ -97,6 +97,15 @@ public extension Chaining where Self: Any {
     try operation(&this)
     return this
   }
+
+  @inlinable
+  @discardableResult
+  func assigning(
+    _ value: inout Self?
+  ) -> Self {
+    value = self
+    return self
+  }
 }
 
 public extension Chaining where Self: AnyObject {
@@ -106,6 +115,15 @@ public extension Chaining where Self: AnyObject {
     _ operation: (Self) throws -> Void
   ) rethrows -> Self {
     try operation(self)
+    return self
+  }
+
+  @inlinable
+  @discardableResult
+  func assigning(
+    _ value: inout Self?
+  ) -> Self {
+    value = self
     return self
   }
 }
