@@ -1,3 +1,5 @@
+import Foundation
+
 public extension Dictionary {
   @inline(__always)
   static func += (lhs: inout Dictionary, rhs: Dictionary) {
