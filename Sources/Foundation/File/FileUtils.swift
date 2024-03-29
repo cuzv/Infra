@@ -61,7 +61,7 @@ public extension FileUtils {
     ).first else {
       throw Failure.fileNotExist
     }
-    return try load(from: url)
+    return try load(from: url.appendingPathComponent(fileName))
   }
 
   static func load<T: Decodable>(
