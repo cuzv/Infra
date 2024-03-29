@@ -9,7 +9,7 @@ public struct FileStorage<Value: Codable> {
   public init(directory: FileManager.SearchPathDirectory, fileName: String) {
     self.directory = directory
     self.fileName = fileName
-    value = try? FileUtils.loadJSON(from: directory, fileName: fileName)
+    value = try? FileUtils.load(from: directory, fileName: fileName)
   }
 
   public var wrappedValue: Value? {
@@ -22,7 +22,7 @@ public struct FileStorage<Value: Codable> {
 
       DispatchQueue.fileStorage.async {
         if let value = newValue {
-          try? FileUtils.writeJSON(value, to: directory, fileName: fileName)
+          try? FileUtils.write(value, to: directory, fileName: fileName)
         } else {
           try? FileUtils.delete(from: directory, fileName: fileName)
         }
