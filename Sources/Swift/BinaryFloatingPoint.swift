@@ -23,4 +23,12 @@ public extension BinaryFloatingPoint {
     let factor = Self(pow(10.0, Double(max(0, numberOfDecimalPlaces))))
     return (self * factor).rounded(rule) / factor
   }
+
+  var isPositive: Bool {
+    self > 0
+  }
+
+  var isNegative: Bool {
+    self < 0
+  }
 }
