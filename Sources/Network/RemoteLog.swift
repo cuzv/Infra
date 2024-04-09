@@ -41,7 +41,7 @@ public final class RemoteLog: RemoteLogging {
 public extension RemoteLog {
   typealias Action = [String: Any]
 
-  struct Event {
+  struct Event: CustomStringConvertible {
     public let name: String
     public let parameters: [String: Any]
 
@@ -52,9 +52,18 @@ public extension RemoteLog {
       self.parameters = parameters
       self.name = name
     }
+
+    public var description: String {
+      """
+      {
+        "name": \(name),
+        "parameters": \(parameters),
+      }
+      """
+    }
   }
 
-  struct Screenview {
+  struct Screenview: CustomStringConvertible {
     public let name: String
     public let type: String
 
@@ -64,6 +73,15 @@ public extension RemoteLog {
     ) {
       self.type = type
       self.name = name
+    }
+
+    public var description: String {
+      """
+      {
+        "name": \(name),
+        "type": \(type),
+      }
+      """
     }
   }
 }
