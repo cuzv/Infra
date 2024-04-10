@@ -1,11 +1,13 @@
 import Combine
 import Foundation
 
+// swiftformat:disable numberFormatting
 @available(macOS, introduced: 10.15, deprecated: 100000.0, message: "Use Observed instead")
 @available(iOS, introduced: 13.0, deprecated: 100000.0, message: "Use Observed instead")
 @available(tvOS, introduced: 13.0, deprecated: 100000.0, message: "Use Observed instead")
 @available(watchOS, introduced: 6.0, deprecated: 100000.0, message: "Use Observed instead")
 @available(macCatalyst, introduced: 13.0, deprecated: 100000.0, message: "Use Observed instead")
+// swiftformat:enable numberFormatting
 @propertyWrapper
 public final class Observable<Value>: ObservableObject {
   @Published private var innerValue: Value
