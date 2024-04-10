@@ -83,3 +83,22 @@ public extension Collection {
     return count > value ? self[index] : nil
   }
 }
+
+public extension Collection {
+  func gapping(with maker: (Int) -> Element) -> [Element] {
+    if isEmpty {
+      return []
+    }
+
+    var res = [Element]()
+
+    for e in enumerated() {
+      res.append(e.element)
+      if index(startIndex, offsetBy: e.offset) != endIndex {
+        res.append(maker(e.offset))
+      }
+    }
+
+    return res
+  }
+}
