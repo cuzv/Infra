@@ -39,3 +39,21 @@ public extension Data {
     hashing(using: SHA512.self)
   }
 }
+
+@available(iOS 13.0, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
+public extension HMAC {
+  static func authenticate(message: String, key: String) -> String? {
+    guard
+      let keyData = key.data(using: .utf8),
+      let messageData = message.data(using: .utf8)
+    else {
+      return nil
+    }
+
+    let hmac = authenticationCode(
+      for: messageData,
+      using: SymmetricKey(data: keyData)
+    )
+    return Data(hmac).map { String(format: "%02hhx", $0) }.joined()
+  }
+}

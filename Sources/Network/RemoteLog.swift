@@ -47,19 +47,17 @@ public extension RemoteLog {
 
     public init(
       name: String,
-      parameters: [String: Any]
+      parameters: [String: Any] = [:]
     ) {
       self.parameters = parameters
       self.name = name
     }
 
     public var description: String {
-      """
-      {
-        "name": \(name),
-        "parameters": \(parameters),
-      }
-      """
+      [
+        "name": name,
+        "parameters": parameters,
+      ].prettyPrinted
     }
   }
 
@@ -76,12 +74,10 @@ public extension RemoteLog {
     }
 
     public var description: String {
-      """
-      {
-        "name": \(name),
-        "type": \(type),
-      }
-      """
+      [
+        "name": name,
+        "type": type,
+      ].prettyPrinted
     }
   }
 }

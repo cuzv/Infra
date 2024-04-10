@@ -60,3 +60,23 @@ public extension Dictionary {
     }
   }
 }
+
+public extension Dictionary {
+  var prettyPrinted: String {
+    do {
+      let data = try JSONSerialization.data(
+        withJSONObject: self,
+        options: .prettyPrinted
+      )
+      if let string = String(
+        data: data,
+        encoding: .utf8
+      ) {
+        return string
+      }
+    } catch {
+      Log.out("Error: Unable to pretty print \(self)")
+    }
+    return description
+  }
+}
