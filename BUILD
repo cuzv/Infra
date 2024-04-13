@@ -1,7 +1,7 @@
 load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle")
-load("@build_bazel_rules_ios//rules:framework.bzl", "apple_framework")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 
-apple_framework(
+swift_library(
     name = "Infra",
     srcs = glob([
         "Sources/**/*.swift",
@@ -9,11 +9,7 @@ apple_framework(
     data = [
         ":InfraResources",
     ],
-    platforms = {
-        "ios": "12.0",
-        "macos": "10.13",
-    },
-    swift_version = "5.9",
+    module_name = "Infra",
     visibility = [
         "//visibility:public",
     ],
@@ -22,9 +18,6 @@ apple_framework(
 apple_resource_bundle(
     name = "InfraResources",
     bundle_name = "Infra",
-    # infoplists = [
-    #     "Resources/Info.plist",
-    # ],
     resources = glob([
         "Resources/*",
     ]),
