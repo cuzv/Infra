@@ -77,10 +77,16 @@ public extension Collection {
 }
 
 public extension Collection {
-  subscript(safe value: Int) -> Element? {
+  subscript(safe offset: Int) -> Element? {
     var index: Index = startIndex
-    formIndex(&index, offsetBy: value)
-    return count > value ? self[index] : nil
+    formIndex(&index, offsetBy: offset)
+    return count > offset ? self[index] : nil
+  }
+
+  subscript(_ offset: Int, default defaultValue: @autoclosure () -> Element) -> Element {
+    var index: Index = startIndex
+    formIndex(&index, offsetBy: offset)
+    return count > offset ? self[index] : defaultValue()
   }
 }
 

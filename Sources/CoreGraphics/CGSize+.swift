@@ -89,7 +89,41 @@ public extension CGSize {
 }
 
 public extension CGSize {
+  @available(*, deprecated, renamed: "CGSize.init(value:)")
   init(length: CGFloat) {
     self.init(width: length, height: length)
+  }
+
+  init(value: CGFloat) {
+    self.init(width: value, height: value)
+  }
+
+  init(width: CGFloat) {
+    self.init(width: width, height: 0)
+  }
+
+  init(height: CGFloat) {
+    self.init(width: 0, height: height)
+  }
+}
+
+extension CGSize: ExpressibleByIntegerLiteral {
+  public init(integerLiteral value: IntegerLiteralType) {
+    self = .init(value: CGFloat(value))
+  }
+}
+
+extension CGSize: ExpressibleByFloatLiteral {
+  public init(floatLiteral value: FloatLiteralType) {
+    self = .init(value: value)
+  }
+}
+
+extension CGSize: ExpressibleByArrayLiteral {
+  public init(arrayLiteral elements: CGFloat...) {
+    self = .init(
+      width: elements[0, default: 0],
+      height: elements[1, default: 0]
+    )
   }
 }

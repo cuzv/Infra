@@ -52,3 +52,14 @@ public extension CGRect {
     offsetBy(dx: boundingRect.midX - midX, dy: boundingRect.midY - midY)
   }
 }
+
+extension CGRect: ExpressibleByArrayLiteral {
+  public init(arrayLiteral elements: CGFloat...) {
+    self = .init(
+      x: elements[0, default: 0],
+      y: elements[1, default: 0],
+      width: elements[2, default: 0],
+      height: elements[3, default: 0]
+    )
+  }
+}
