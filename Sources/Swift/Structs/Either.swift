@@ -45,3 +45,6 @@ public enum Either<Left, Right> {
     }
   }
 }
+
+extension Either: Equatable where Left: Equatable, Right: Equatable {}
+extension Either: Hashable where Left: Hashable, Right: Hashable {}
