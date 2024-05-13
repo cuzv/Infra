@@ -49,6 +49,15 @@ public extension Chaining where Self: Any {
     this[keyPath: memeber] = m
     return this
   }
+
+  @inlinable
+  @discardableResult
+  func assigning(
+    _ value: inout Self?
+  ) -> Self {
+    value = self
+    return self
+  }
 }
 
 public extension Chaining where Self: AnyObject {
@@ -83,20 +92,6 @@ public extension Chaining where Self: AnyObject {
     member(self)?[keyPath: keyPath] = value
     return self
   }
-}
-
-// MARK: - Access
-
-public extension Chaining where Self: Any {
-  @inlinable
-  @discardableResult
-  func accessing(
-    _ operation: (inout Self) throws -> Void
-  ) rethrows -> Self {
-    var this = self
-    try operation(&this)
-    return this
-  }
 
   @inlinable
   @discardableResult
@@ -105,25 +100,54 @@ public extension Chaining where Self: Any {
   ) -> Self {
     value = self
     return self
+  }
+}
+
+// MARK: - Mutation
+
+public extension Chaining where Self: Any {
+  @inlinable
+  @discardableResult
+  func with(
+    _ mutation: (inout Self) throws -> Void
+  ) rethrows -> Self {
+    var this = self
+    try mutation(&this)
+    return this
   }
 }
 
 public extension Chaining where Self: AnyObject {
   @inlinable
   @discardableResult
-  func accessing(
+  func with(
     _ operation: (Self) throws -> Void
   ) rethrows -> Self {
     try operation(self)
     return self
   }
+}
 
-  @inlinable
+public extension Chaining where Self: Any & Sendable {
+  @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+  @Sendable
+  func with(
+    _ mutation: @Sendable (inout Self) async throws -> Void
+  ) async rethrows -> Self {
+    var this = self
+    try await mutation(&this)
+    return this
+  }
+}
+
+public extension Chaining where Self: AnyObject & Sendable {
+  @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+  @Sendable
   @discardableResult
-  func assigning(
-    _ value: inout Self?
-  ) -> Self {
-    value = self
+  func with(
+    _ operation: @Sendable (Self) async throws -> Void
+  ) async rethrows -> Self {
+    try await operation(self)
     return self
   }
 }
