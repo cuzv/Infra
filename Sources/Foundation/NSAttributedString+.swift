@@ -40,4 +40,11 @@ public extension NSAttributedString {
     return boundingRect(with: size, options: options, context: nil).size
   }
 }
+
+public extension NSAttributedString.Key {
+  static let mention = NSAttributedString.Key(rawValue: "AttributedString.Key.mention")
+  static let hashtag = NSAttributedString.Key(rawValue: "AttributedString.Key.hashtag")
+  static let phoneNumber = NSAttributedString.Key(rawValue: "AttributedString.Key.phoneNumber")
+}
+
 #endif
