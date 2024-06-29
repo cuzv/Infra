@@ -15,5 +15,13 @@ public extension AnyPublisher {
       ).eraseToAnyPublisher()
     }
   }
+
+  static func attempt(
+    body: () throws -> Output
+  ) -> AnyPublisher<Output, Failure>
+    where Failure == AnyError
+  {
+    .init(result: .init(attempt: body))
+  }
 }
 #endif

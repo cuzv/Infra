@@ -42,14 +42,20 @@ extension PassthroughSubject: BindingProvider {}
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
 public extension BindingProvider where Self: AnyObject {
+  @discardableResult
   func binding<Element>(
     _ publisher: any Publisher<Element, Never>,
     to keyPath: ReferenceWritableKeyPath<Self, Element>
   ) -> Self {
-    publisher.assignWeakSafely(to: keyPath, on: self).store(in: &subscriptions)
+    publisher.assignWeakSafely(
+      to: keyPath,
+      on: self
+    )
+    .store(in: &subscriptions)
     return self
   }
 
+  @discardableResult
   func binding<Element>(
     _ publisher: any Publisher<Element, Never>,
     to keyPath: ReferenceWritableKeyPath<Self, Element?>

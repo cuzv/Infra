@@ -40,4 +40,7 @@ public struct Combine<Base> {
 }
 
 extension NSObject: CombineExtensionsProvider {}
+
+@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+public typealias ReactiveObject = BindingProvider & CombineExtensionsProvider & ObservableObject & Reference
 #endif

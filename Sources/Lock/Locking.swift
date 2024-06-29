@@ -12,7 +12,7 @@ public protocol Locking {
   func unlock()
 }
 
-/// Copied from RxSwift.
+/// Origin from RxSwift.
 public extension Locking {
   @inline(__always)
   func performLocked(_ action: () -> Void) {

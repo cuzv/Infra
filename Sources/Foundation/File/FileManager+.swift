@@ -65,7 +65,7 @@ public extension FileManager.DirectoryEnumerationOptions {
   ]
 }
 
-/// Copied from https://github.com/wvdk/FileManagerCopyAllChildren/blob/main/Sources/FileManagerCopyAllChildren/FileManager%2BcopyAllChildren.swift
+/// Origin from https://github.com/wvdk/FileManagerCopyAllChildren/blob/main/Sources/FileManagerCopyAllChildren/FileManager%2BcopyAllChildren.swift
 public extension FileManager {
   func sizeOfEntireFolder(
     at target: URL,

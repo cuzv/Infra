@@ -149,6 +149,14 @@ public extension Publisher where Failure == Never {
   ) -> AnyCancellable {
     bind(to: .init(target: target, receiveValue: action))
   }
+
+  @discardableResult
+  func safeBind<Target: BindingProvider & AnyObject>(
+    to target: Target,
+    action: @escaping (Target, Output) -> Void
+  ) -> AnyCancellable {
+    bind(to: .init(target: target, receiveOnMainQueue: true, receiveValue: action))
+  }
 }
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)

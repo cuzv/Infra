@@ -2,6 +2,7 @@
 import Combine
 import Foundation
 
+@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public extension Publisher {
   func removeDuplicates(
     by transform: @escaping (Self.Output) -> some Equatable

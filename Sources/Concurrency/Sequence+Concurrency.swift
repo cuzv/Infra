@@ -5,7 +5,7 @@
  */
 
 // Checkout article https://www.swiftbysundell.com/articles/async-and-concurrent-forEach-and-map/
-// Copied from https://raw.githubusercontent.com/happn-app/CollectionConcurrencyKit/taskgroup/Sources/CollectionConcurrencyKit.swift
+// Origin from https://raw.githubusercontent.com/happn-app/CollectionConcurrencyKit/taskgroup/Sources/CollectionConcurrencyKit.swift
 // See also https://github.com/JohnSundell/CollectionConcurrencyKit/pull/7
 
 // MARK: - ForEach

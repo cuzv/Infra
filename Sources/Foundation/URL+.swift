@@ -93,4 +93,6 @@ public extension URL {
     }
     self.init(string: link)
   }
+
+  static let unsubscribe: URL = "itms-apps://apps.apple.com/account/subscriptions"
 }

@@ -4,7 +4,7 @@ import Foundation
 
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, macCatalyst 13.0, *)
 public extension Publisher {
-  /// Copied from https://gist.github.com/ollieatkinson/c14d60d7a83f7cbbe384d0c4f486a46b
+  /// Origin from https://gist.github.com/ollieatkinson/c14d60d7a83f7cbbe384d0c4f486a46b
   func retry<S: Scheduler>(
     _ max: Int = Int.max,
     delay: Publishers.RetryDelay<Self, S>.TimingFunction,

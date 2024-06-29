@@ -2,11 +2,16 @@ import Dispatch
 import Foundation
 
 @propertyWrapper
-public class SafeMutable<Value> {
+public final class Sync<Value> {
   private var value: Value
   private let queue: DispatchQueue
 
-  public init(value: Value, queue: DispatchQueue = .init(label: "SafeMutable")) {
+  public init(
+    value: Value,
+    queue: DispatchQueue = .init(
+      label: "Sync.\(UUID().uuidString)"
+    )
+  ) {
     self.value = value
     self.queue = queue
   }
@@ -18,24 +23,57 @@ public class SafeMutable<Value> {
       }
     }
     set {
-      queue.async {
+      queue.sync {
+        value = newValue
+      }
+    }
+  }
+}
+
+@propertyWrapper
+public final class ThreadSafe<Value> {
+  private var value: Value
+  private let queue: DispatchQueue
+
+  public init(
+    value: Value,
+    queue: DispatchQueue = .init(
+      label: "ThreadSafe.\(UUID().uuidString)",
+      attributes: .concurrent
+    )
+  ) {
+    self.value = value
+    self.queue = queue
+  }
+
+  public var wrappedValue: Value {
+    get {
+      queue.sync {
+        value
+      }
+    }
+    set {
+      queue.async(flags: .barrier) {
         self.value = newValue
       }
     }
   }
 
   public func mutate(_ block: @escaping (inout Value) -> Void) {
-    queue.async {
+    queue.async(flags: .barrier) {
       block(&self.value)
     }
   }
 }
 
-public class SafeMutableDictionary<Key: Hashable, Value>: CustomDebugStringConvertible {
+public final class ThreadSafeDictionary<Key: Hashable, Value>: CustomDebugStringConvertible {
   private var dict = [Key: Value]()
   private let queue: DispatchQueue
 
-  public init(queue: DispatchQueue = .init(label: "SafeMutableDictionary.\(UUID().uuidString)", attributes: .concurrent)) {
+  public init(queue: DispatchQueue = .init(
+    label: "ThreadSafeDictionary.\(UUID().uuidString)",
+    attributes: .concurrent
+  )) {
     self.queue = queue
   }
 
@@ -46,7 +84,9 @@ public class SafeMutableDictionary<Key: Hashable, Value>: CustomDebugStringConve
       }
     }
     set {
-      queue.async(flags: .barrier) { [weak self] in self?.dict[key] = newValue }
+      queue.async(flags: .barrier) {
+        self.dict[key] = newValue
+      }
     }
   }
 
@@ -61,11 +101,14 @@ public class SafeMutableDictionary<Key: Hashable, Value>: CustomDebugStringConve
   }
 }
 
-public class SafeMutableArray<Element> {
+public final class ThreadSafeArray<Element> {
   private var array: [Element] = []
   private let queue: DispatchQueue
 
-  public init(queue: DispatchQueue = .init(label: "SafeMutableArray.\(UUID().uuidString)", attributes: .concurrent)) {
+  public init(queue: DispatchQueue = .init(
+    label: "ThreadSafeArray.\(UUID().uuidString)",
+    attributes: .concurrent
+  )) {
     self.queue = queue
   }
 

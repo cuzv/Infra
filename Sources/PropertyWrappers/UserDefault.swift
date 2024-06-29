@@ -1,4 +1,4 @@
-// Copied from https://github.com/ole/PropertyWrappers/blob/master/Sources/PropertyWrappers/UserDefault.swift
+// Origin from https://github.com/ole/PropertyWrappers/blob/master/Sources/PropertyWrappers/UserDefault.swift
 
 import Foundation
 

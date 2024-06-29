@@ -45,10 +45,7 @@ public extension String {
   }
 
   func contains(_ string: String, caseSensitive: Bool = true) -> Bool {
-    if !caseSensitive {
-      return range(of: string, options: .caseInsensitive) != nil
-    }
-    return range(of: string) != nil
+    range(of: string, options: caseSensitive ? [] : .caseInsensitive) != nil
   }
 
   func substring(in range: CountableRange<Int>) -> String? {

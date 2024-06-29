@@ -4,7 +4,7 @@ import Foundation
 public extension Task where Failure == Error {
   /// Delaying an asynchronous Swift Task
   ///
-  /// Copied from https://www.swiftbysundell.com/articles/delaying-an-async-swift-task/
+  /// Origin from https://www.swiftbysundell.com/articles/delaying-an-async-swift-task/
   @discardableResult
   init(
     priority: TaskPriority? = nil,
